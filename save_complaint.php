@@ -15,7 +15,13 @@ $priority = $_POST['priority'];
 
 // Validate required fields
 if (empty($complainant_id) || empty($category_id) || empty($subject) || empty($description) || empty($date_filed)) {
-    header("Location: complaint_register.php?status=error");
+    header("Location: complaint_register.php?status=error&reason=required");
+    exit();
+}
+
+// Date filed cannot be a future date
+if ($date_filed > date("Y-m-d")) {
+    header("Location: complaint_register.php?status=error&reason=futuredate");
     exit();
 }
 
@@ -34,7 +40,6 @@ $stmt->bind_param("siisssss", $complaint_number, $complainant_id, $category_id, 
 if ($stmt->execute()) {
     $complaint_id = $stmt->insert_id;
 
-    // Handle file upload if provided
     if (isset($_FILES['supporting_document']) && $_FILES['supporting_document']['error'] == 0) {
         $upload_dir = "uploads/";
         if (!is_dir($upload_dir)) {

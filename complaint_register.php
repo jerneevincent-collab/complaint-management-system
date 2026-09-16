@@ -16,7 +16,14 @@ $categories = $conn->query("SELECT category_id, category_name FROM complaint_cat
 <body>
     <h2>Complaint Registration</h2>
     <?php if (isset($_GET['status']) && $_GET['status'] == 'success') echo "<p style='color:green;'>Complaint filed successfully! Complaint Number: " . htmlspecialchars($_GET['complaint_number']) . "</p>"; ?>
-    <?php if (isset($_GET['status']) && $_GET['status'] == 'error') echo "<p style='color:red;'>Please fill out all required fields.</p>"; ?>
+   <?php if (isset($_GET['status']) && $_GET['status'] == 'error'):
+    $reason = isset($_GET['reason']) ? $_GET['reason'] : '';
+    if ($reason == 'futuredate') {
+        echo "<p style='color:red;'>Date filed cannot be a future date.</p>";
+    } else {
+        echo "<p style='color:red;'>Please fill out all required fields.</p>";
+    }
+endif; ?>
 
     <form action="save_complaint.php" method="POST">
         <label>Complainant:</label><br>
