@@ -1,4 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] != 1) {
+    die("Access denied. Administrator access only.");
+}
+
 $conn = new mysqli("localhost", "root", "", "complaint_management_db");
 
 if ($conn->connect_error) {
@@ -52,6 +57,7 @@ $result = $conn->query(
 </head>
 <body>
     <h2>Complaint-Handling Personnel</h2>
+    <p><a href="index.php">&larr; Back to Home</a></p>
 
     <h3>Add New Personnel</h3>
     <form method="POST">

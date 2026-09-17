@@ -1,4 +1,8 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id']) || $_SESSION['role_id'] == 6) {
+    die("Access denied.");
+}
 $conn = new mysqli("localhost", "root", "", "complaint_management_db");
 
 if ($conn->connect_error) {

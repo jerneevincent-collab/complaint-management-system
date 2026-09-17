@@ -1,6 +1,9 @@
 <?php
+session_start();
+if (!isset($_SESSION['user_id']) || !in_array($_SESSION['role_id'], [1, 5])) {
+    die("Access denied. Only Administrators and Supervisors can close complaints.");
+}
 $conn = new mysqli("localhost", "root", "", "complaint_management_db");
-
 if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
