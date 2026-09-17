@@ -37,8 +37,22 @@ $result = $conn->query(
             <td><?php echo htmlspecialchars($row['subject']); ?></td>
             <td><?php echo htmlspecialchars($row['investigator_name']); ?></td>
             <td><?php echo $row['start_date']; ?></td>
-            <td><?php echo htmlspecialchars($row['status']); ?></td>
-            <td><a href="investigation_findings_form.php?investigation_id=<?php echo $row['investigation_id']; ?>">Add Findings</a></td>
+            <td>
+                <form action="update_investigation_status.php" method="POST" style="margin:0;">
+                    <input type="hidden" name="investigation_id" value="<?php echo $row['investigation_id']; ?>">
+                    <select name="new_status" onchange="this.form.submit()">
+                        <option value="Assigned" <?php if ($row['status'] == 'Assigned') echo 'selected'; ?>>Assigned</option>
+                        <option value="In Progress" <?php if ($row['status'] == 'In Progress') echo 'selected'; ?>>In Progress</option>
+                        <option value="Evidence Gathering" <?php if ($row['status'] == 'Evidence Gathering') echo 'selected'; ?>>Evidence Gathering</option>
+                        <option value="Findings Prepared" <?php if ($row['status'] == 'Findings Prepared') echo 'selected'; ?>>Findings Prepared</option>
+                        <option value="Completed" <?php if ($row['status'] == 'Completed') echo 'selected'; ?>>Completed</option>
+                    </select>
+                </form>
+            </td>
+            <td>
+                <a href="investigation_findings_form.php?investigation_id=<?php echo $row['investigation_id']; ?>">Add Findings</a> |
+                <a href="investigation_evidence_form.php?investigation_id=<?php echo $row['investigation_id']; ?>">Manage Evidence</a>
+            </td>
         </tr>
         <?php endwhile; ?>
     </table>

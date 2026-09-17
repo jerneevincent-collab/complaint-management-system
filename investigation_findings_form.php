@@ -49,5 +49,32 @@ $investigation = $stmt->get_result()->fetch_assoc();
 
         <button type="submit">Save Findings</button>
     </form>
+
+    <?php
+$findingsCheck = $conn->prepare("SELECT * FROM investigation_findings WHERE investigation_id = ? ORDER BY finding_id DESC");
+$findingsCheck->bind_param("i", $investigation_id);
+$findingsCheck->execute();
+$findingsResult = $findingsCheck->get_result();
+
+if ($findingsResult->num_rows > 0):
+?>
+<h3>Recorded Findings</h3>
+<table border="1" cellpadding="8" cellspacing="0">
+    <tr>
+        <th>Date Investigated</th>
+        <th>Findings</th>
+        <th>Classification</th>
+        <th>Recommendation</th>
+    </tr>
+    <?php while ($f = $findingsResult->fetch_assoc()): ?>
+    <tr>
+        <td><?php echo $f['date_investigated']; ?></td>
+        <td><?php echo nl2br(htmlspecialchars($f['findings'])); ?></td>
+        <td><?php echo htmlspecialchars($f['classification']); ?></td>
+        <td><?php echo nl2br(htmlspecialchars($f['recommendation'])); ?></td>
+    </tr>
+    <?php endwhile; ?>
+</table>
+<?php endif; ?>
 </body>
 </html>
