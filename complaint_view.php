@@ -42,6 +42,7 @@ if (!$complaint) {
         <tr><th>Status</th><td><?php echo htmlspecialchars($complaint['status']); ?></td></tr>
     </table>
 
+    <?php if ($complaint['status'] != 'Closed'): ?>
     <h3>Update Status</h3>
     <form action="update_complaint_status.php" method="POST">
         <input type="hidden" name="complaint_id" value="<?php echo $complaint['complaint_id']; ?>">
@@ -57,5 +58,8 @@ if (!$complaint) {
         </select>
         <button type="submit">Update Status</button>
     </form>
+    <?php else: ?>
+    <p><em>This complaint is closed and can no longer be modified.</em></p>
+    <?php endif; ?>
 </body>
 </html>
