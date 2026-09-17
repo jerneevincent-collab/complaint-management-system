@@ -16,16 +16,19 @@ $categories = $conn->query("SELECT category_id, category_name FROM complaint_cat
 <body>
     <h2>Complaint Registration</h2>
     <?php if (isset($_GET['status']) && $_GET['status'] == 'success') echo "<p style='color:green;'>Complaint filed successfully! Complaint Number: " . htmlspecialchars($_GET['complaint_number']) . "</p>"; ?>
-   <?php if (isset($_GET['status']) && $_GET['status'] == 'error'):
-    $reason = isset($_GET['reason']) ? $_GET['reason'] : '';
-    if ($reason == 'futuredate') {
-        echo "<p style='color:red;'>Date filed cannot be a future date.</p>";
-    } else {
-        echo "<p style='color:red;'>Please fill out all required fields.</p>";
-    }
-endif; ?>
+    <?php if (isset($_GET['status']) && $_GET['status'] == 'error'):
+        $reason = isset($_GET['reason']) ? $_GET['reason'] : '';
+        $msg = isset($_GET['msg']) ? $_GET['msg'] : '';
+        if ($reason == 'futuredate') {
+            echo "<p style='color:red;'>Date filed cannot be a future date.</p>";
+        } elseif (!empty($msg)) {
+            echo "<p style='color:red;'>" . htmlspecialchars($msg) . "</p>";
+        } else {
+            echo "<p style='color:red;'>Please fill out all required fields.</p>";
+        }
+    endif; ?>
 
-    <form action="save_complaint.php" method="POST">
+    <form id="complaintForm" action="save_complaint.php" method="POST" enctype="multipart/form-data">
         <label>Complainant:</label><br>
         <select name="complainant_id" required>
             <option value="">-- Select Complainant --</option>
@@ -49,7 +52,7 @@ endif; ?>
         <textarea name="description" rows="4" required></textarea><br><br>
 
         <label>Date Filed:</label><br>
-        <input type="date" name="date_filed" required><br><br>
+        <input type="date" name="date_filed" id="dateFiled" required><br><br>
 
         <label>Location:</label><br>
         <input type="text" name="location"><br><br>
@@ -66,5 +69,18 @@ endif; ?>
 
         <button type="submit">Submit Complaint</button>
     </form>
+
+    <script>
+        document.getElementById('complaintForm').addEventListener('submit', function(e) {
+            var dateFiled = document.getElementById('dateFiled').value;
+            var today = new Date();
+            var todayStr = today.getFullYear() + '-' + String(today.getMonth() + 1).padStart(2, '0') + '-' + String(today.getDate()).padStart(2, '0');
+
+            if (dateFiled > todayStr) {
+                alert('Date filed cannot be a future date.');
+                e.preventDefault();
+            }
+        });
+    </script>
 </body>
 </html>

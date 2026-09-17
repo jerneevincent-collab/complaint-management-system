@@ -1,4 +1,6 @@
 <?php
+
+
 $conn = new mysqli("localhost", "root", "", "complaint_management_db");
 
 if ($conn->connect_error) {
@@ -13,28 +15,37 @@ $date_filed = $_POST['date_filed'];
 $location = trim($_POST['location']);
 $priority = $_POST['priority'];
 
-// Validate required fields
 if (empty($complainant_id) || empty($category_id) || empty($subject) || empty($description) || empty($date_filed)) {
     header("Location: complaint_register.php?status=error&reason=required");
     exit();
 }
 
-// Date filed cannot be a future date
 if ($date_filed > date("Y-m-d")) {
     header("Location: complaint_register.php?status=error&reason=futuredate");
     exit();
 }
 
-// Generate complaint number: CMS-YYYY-XXXX
+if (isset($_FILES['supporting_document']) && $_FILES['supporting_document']['error'] == 0) {
+    $allowedTypes = array('image/jpeg', 'image/png', 'application/pdf');
+    $maxSize = 5242880;
+
+    if (!in_array($_FILES['supporting_document']['type'], $allowedTypes)) {
+        header("Location: complaint_register.php?status=error&msg=" . urlencode("Only JPG, PNG, or PDF files are allowed."));
+        exit();
+    }
+
+    if ($_FILES['supporting_document']['size'] > $maxSize) {
+        header("Location: complaint_register.php?status=error&msg=" . urlencode("File size must not exceed 5MB."));
+        exit();
+    }
+}
+
 $year = date("Y");
 $result = $conn->query("SELECT COUNT(*) as total FROM complaints WHERE YEAR(created_at) = $year");
 $count = $result->fetch_assoc()['total'] + 1;
 $complaint_number = "CMS-" . $year . "-" . str_pad($count, 4, "0", STR_PAD_LEFT);
 
-$stmt = $conn->prepare(
-    "INSERT INTO complaints (complaint_number, complainant_id, category_id, subject, description, date_filed, location, priority, status)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Submitted')"
-);
+$stmt = $conn->prepare("INSERT INTO complaints (complaint_number, complainant_id, category_id, subject, description, date_filed, location, priority, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'Submitted')");
 $stmt->bind_param("siisssss", $complaint_number, $complainant_id, $category_id, $subject, $description, $date_filed, $location, $priority);
 
 if ($stmt->execute()) {
@@ -57,7 +68,7 @@ if ($stmt->execute()) {
 
     header("Location: complaint_register.php?status=success&complaint_number=" . urlencode($complaint_number));
 } else {
-    header("Location: complaint_register.php?status=error");
+    header("Location: complaint_register.php?status=error&msg=" . urlencode("Database error. Please try again."));
 }
 
 $stmt->close();
