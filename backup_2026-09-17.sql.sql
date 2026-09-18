@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 16, 2026 at 04:50 AM
+-- Generation Time: Sep 18, 2026 at 12:56 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -39,6 +39,14 @@ CREATE TABLE `actions` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `actions`
+--
+
+INSERT INTO `actions` (`action_id`, `complaint_id`, `investigation_id`, `action_type`, `action_description`, `responsible_person`, `target_date`, `status`, `created_at`) VALUES
+(1, 2, 1, 'Employee Action', 'None', 2, '2026-09-17', 'Completed', '2026-09-17 03:14:24'),
+(2, 3, 2, 'Corrective Action', 'Reviewed and addressed the issue', 1, '0000-00-00', 'Completed', '2026-09-17 03:56:55');
+
 -- --------------------------------------------------------
 
 --
@@ -73,6 +81,15 @@ CREATE TABLE `assignments` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `assignments`
+--
+
+INSERT INTO `assignments` (`assignment_id`, `complaint_id`, `assigned_to`, `assigned_by`, `department_id`, `assignment_date`, `due_date`, `instructions`, `status`, `created_at`) VALUES
+(1, 2, 2, NULL, 3, '0026-09-16', '2026-10-01', 'None', 'reassigned', '2026-09-16 09:11:59'),
+(2, 1, 1, NULL, 1, '2026-09-16', '2026-09-20', 'None', 'active', '2026-09-16 09:15:34'),
+(3, 3, 1, NULL, 3, '2026-09-17', '2026-09-30', 'None', 'active', '2026-09-17 03:46:48');
+
 -- --------------------------------------------------------
 
 --
@@ -88,6 +105,14 @@ CREATE TABLE `assignment_history` (
   `assigned_by` int(11) DEFAULT NULL,
   `assignment_date` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `assignment_history`
+--
+
+INSERT INTO `assignment_history` (`history_id`, `complaint_id`, `previous_assignee`, `new_assignee`, `reason_for_reassignment`, `assigned_by`, `assignment_date`) VALUES
+(1, 2, 1, 1, 'Not available', NULL, '2026-09-16 09:14:29'),
+(2, 2, 1, 2, 'Not available', NULL, '2026-09-16 09:16:02');
 
 -- --------------------------------------------------------
 
@@ -121,6 +146,17 @@ CREATE TABLE `audit_logs` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `audit_logs`
+--
+
+INSERT INTO `audit_logs` (`log_id`, `user_id`, `activity`, `record_affected`, `previous_value`, `new_value`, `ip_address`, `created_at`) VALUES
+(1, 1, 'Closed complaint', 'complaint_id: 2', 'Resolved', 'Closed', NULL, '2026-09-17 03:31:15'),
+(2, 1, 'Closed complaint', 'complaint_id: 3', 'Resolved', 'Closed', NULL, '2026-09-16 22:02:12'),
+(3, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-17 04:28:25'),
+(4, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-17 09:46:09'),
+(5, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 10:51:08');
+
 -- --------------------------------------------------------
 
 --
@@ -138,6 +174,18 @@ CREATE TABLE `complainants` (
   `date_registered` timestamp NOT NULL DEFAULT current_timestamp(),
   `status` enum('active','inactive') DEFAULT 'active'
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `complainants`
+--
+
+INSERT INTO `complainants` (`complainant_id`, `full_name`, `contact_number`, `email`, `address`, `organization_department`, `preferred_contact_method`, `date_registered`, `status`) VALUES
+(1, 'Marcus Baron', '09877777777', 'marcus@gmail.co', 'Diadi', 'BSIT', 'email', '2026-09-16 07:09:31', 'active'),
+(3, 'Ioan Gonzales', '0999999999', 'Ioan@gmail.com', 'Bayombong', 'BSCS', 'email', '2026-09-16 07:35:40', 'active'),
+(4, 'Kenneth Kyle', '09666666666', 'kyle@gmail.com', 'Bambang', 'BSCS', 'phone', '2026-09-16 07:44:07', 'active'),
+(5, 'Charlez Jules Espiritu', '09345627658', 'jules@gmail.com', 'Diadi', 'BSIT', 'email', '2026-09-17 03:41:17', 'active'),
+(6, 'Jed Razon', '09643865413', 'jed@gmail.com', 'Bundok', 'BSIT', 'email', '2026-09-17 03:41:56', 'active'),
+(7, 'Lance Goloyugo', '0987687679', 'lance@gmail.com', 'La Torre', 'BSIT', 'email', '2026-09-17 03:42:44', 'active');
 
 -- --------------------------------------------------------
 
@@ -158,6 +206,19 @@ CREATE TABLE `complaints` (
   `status` enum('Submitted','For Assignment','Assigned','Under Investigation','Action Required','For Resolution','Resolved','Closed') DEFAULT 'Submitted',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `complaints`
+--
+
+INSERT INTO `complaints` (`complaint_id`, `complaint_number`, `complainant_id`, `category_id`, `subject`, `description`, `date_filed`, `location`, `priority`, `status`, `created_at`) VALUES
+(1, 'CMS-2026-0001', 1, 5, 'Overcharged', 'Urgent', '2026-09-16', 'Bayombong', 'medium', 'Assigned', '2026-09-16 07:56:36'),
+(2, 'CMS-2026-0002', 3, 5, 'Tuition Fee', 'can\'t afford tuition fee', '2026-09-30', 'Bayombong', 'medium', 'Closed', '2026-09-16 08:06:17'),
+(3, 'CMS-2026-0003', 7, 6, 'Failed', 'None', '2026-09-17', 'Bayombong', 'medium', 'Closed', '2026-09-17 03:44:36'),
+(4, 'CMS-2026-0004', 5, 6, 'Failed', 'failed subjects', '0026-09-30', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:06:41'),
+(5, 'CMS-2026-0005', 5, 6, 'Failed', 'failed subject', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:28:54'),
+(6, 'CMS-2026-0006', 5, 6, 'Failed', 'failed subject', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:30:54'),
+(7, 'CMS-2026-0007', 5, 6, 'Failed', 'failed sub', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:37:26');
 
 -- --------------------------------------------------------
 
@@ -223,6 +284,14 @@ CREATE TABLE `investigations` (
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Dumping data for table `investigations`
+--
+
+INSERT INTO `investigations` (`investigation_id`, `complaint_id`, `investigator_id`, `start_date`, `target_completion_date`, `status`, `created_at`) VALUES
+(1, 2, 1, '2026-09-16', '2026-09-25', 'Completed', '2026-09-16 09:29:12'),
+(2, 3, 1, '2026-09-17', '2026-09-30', 'Completed', '2026-09-17 03:50:38');
+
 -- --------------------------------------------------------
 
 --
@@ -237,6 +306,13 @@ CREATE TABLE `investigation_evidence` (
   `uploaded_by` int(11) DEFAULT NULL,
   `uploaded_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `investigation_evidence`
+--
+
+INSERT INTO `investigation_evidence` (`evidence_id`, `investigation_id`, `file_name`, `file_path`, `uploaded_by`, `uploaded_at`) VALUES
+(1, 1, '1789613844_dd2935c8-97f6-403e-9360-a9a3ae15ae06.jpg', 'uploads/evidence/1789613844_dd2935c8-97f6-403e-9360-a9a3ae15ae06.jpg', NULL, '2026-09-17 02:57:24');
 
 -- --------------------------------------------------------
 
@@ -255,6 +331,13 @@ CREATE TABLE `investigation_findings` (
   `classification` enum('Valid Complaint','Partially Valid','Unsubstantiated','Invalid') DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `investigation_findings`
+--
+
+INSERT INTO `investigation_findings` (`finding_id`, `investigation_id`, `date_investigated`, `evidence_collected`, `findings`, `witnesses`, `recommendation`, `classification`, `created_at`) VALUES
+(1, 1, '2026-09-16', 'CCTV', 'Confirmed', 'Al jean Laygo', 'None', 'Valid Complaint', '2026-09-16 09:34:34');
 
 -- --------------------------------------------------------
 
@@ -288,6 +371,14 @@ CREATE TABLE `resolutions` (
   `supporting_document` varchar(255) DEFAULT NULL,
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `resolutions`
+--
+
+INSERT INTO `resolutions` (`resolution_id`, `complaint_id`, `resolution_type`, `resolution_description`, `resolution_date`, `resolved_by`, `remarks`, `supporting_document`, `created_at`) VALUES
+(1, 2, 'Change', 'None', '2026-09-17', 1, 'None', NULL, '2026-09-17 03:29:39'),
+(2, 3, 'Grade Review', 'Issue has been reviewed and resolved after coordination with the concerned department.', '2026-09-17', 1, 'None', NULL, '2026-09-17 04:01:00');
 
 -- --------------------------------------------------------
 
@@ -332,6 +423,14 @@ CREATE TABLE `users` (
   `status` enum('active','inactive') DEFAULT 'active',
   `created_at` timestamp NOT NULL DEFAULT current_timestamp()
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `role_id`, `department_id`, `full_name`, `email`, `password`, `contact_number`, `specialization`, `status`, `created_at`) VALUES
+(1, 3, 3, 'Vincent Jernee Diaz', 'jerneevincent@gmail.com', '$2y$10$ztifrUaGVr5C9sBkat4t/OcFUS4msKhdxvtF3BZBKP/OffLK3Nn0O', '09611394471', 'IT System', 'active', '2026-09-16 09:06:23'),
+(2, 4, 3, 'Ioan Gonzales', 'gonzalesioan4@gmail.com', '$2y$10$0iuiyVXGSnimPzKTLoitxukkjytK5fm5a.KUosb.k0ohS27MA6xOO', '0987654321', 'Facility Maintenance', 'active', '2026-09-16 09:07:21');
 
 --
 -- Indexes for dumped tables
@@ -482,7 +581,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `actions`
 --
 ALTER TABLE `actions`
-  MODIFY `action_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `action_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `action_monitoring`
@@ -494,13 +593,13 @@ ALTER TABLE `action_monitoring`
 -- AUTO_INCREMENT for table `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `assignment_history`
 --
 ALTER TABLE `assignment_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `attachments`
@@ -512,19 +611,19 @@ ALTER TABLE `attachments`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `complainants`
 --
 ALTER TABLE `complainants`
-  MODIFY `complainant_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `complainant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `complaint_categories`
@@ -542,19 +641,19 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `investigations`
 --
 ALTER TABLE `investigations`
-  MODIFY `investigation_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `investigation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `investigation_evidence`
 --
 ALTER TABLE `investigation_evidence`
-  MODIFY `evidence_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `evidence_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `investigation_findings`
 --
 ALTER TABLE `investigation_findings`
-  MODIFY `finding_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `finding_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `notifications`
@@ -566,7 +665,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `resolutions`
 --
 ALTER TABLE `resolutions`
-  MODIFY `resolution_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `resolution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT for table `roles`
@@ -578,7 +677,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- Constraints for dumped tables
