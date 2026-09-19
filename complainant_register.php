@@ -162,7 +162,7 @@
         <div class="glow"></div>
         <img src="assets/cms-logo.png" alt="CMS Logo" class="logo">
         <h2>Complainant Registration</h2>
-        <p class="subtitle">No login required</p>
+              <p class="subtitle">No login required &middot; <a href="login.php" style="color: var(--accent);">Back</a></p>
 
         <?php if (isset($_GET['status']) && $_GET['status'] == 'success') echo '<p class="success-msg">Complainant registered successfully!</p>'; ?>
         <?php if (isset($_GET['status']) && $_GET['status'] == 'error') echo '<p class="error-msg">All required fields must be filled out.</p>'; ?>

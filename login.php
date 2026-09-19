@@ -270,11 +270,11 @@ if ($conn->connect_error) {
             <button type="submit" class="login-btn">Sign In</button>
         </form>
 
-        <p class="complainant-link">Are you a complainant? <a href="complainant_register.php">File a complaint here</a></p>
+               <p class="complainant-link">Are you a complainant? <a href="complainant_register.php">File a complaint here</a> or <a href="track_complaint.php">track your complaint</a></p>
     </div>
 </div>
 
-<p class="hint">💡 click or drag the cord to turn on the lamp</p>
+<p class="hint">drag the cord to turn on the lamp</p>
 
 <script src="https://unpkg.com/gsap@3/dist/gsap.min.js"></script>
 <script src="https://unpkg.com/gsap@3/dist/Draggable.min.js"></script>

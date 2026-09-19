@@ -27,7 +27,8 @@ $stmt->bind_param("ssssss", $full_name, $contact_number, $email, $address, $orga
 
 // Activity 5: Display success/error messages
 if ($stmt->execute()) {
-    header("Location: complainant_register.php?status=success");
+    $new_complainant_id = $stmt->insert_id;
+    header("Location: complaint_register.php?new_complainant=" . $new_complainant_id);
 } else {
     header("Location: complainant_register.php?status=error");
 }
