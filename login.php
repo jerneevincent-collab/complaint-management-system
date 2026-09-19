@@ -209,6 +209,27 @@ if ($conn->connect_error) {
             position: relative;
             z-index: 1;
         }
+
+        @media (max-width: 600px) {
+            .container {
+                flex-direction: column;
+                gap: 0;
+            }
+            .lamp-wrapper {
+                width: 160px;
+                height: 200px;
+                margin-bottom: -20px;
+            }
+            .login-form {
+                width: 90%;
+                max-width: 340px;
+                padding: 2rem 1.5rem;
+            }
+            .hint {
+                font-size: 0.7rem;
+                margin-top: 10px;
+            }
+        }
     </style>
 </head>
 <body data-on="false">
