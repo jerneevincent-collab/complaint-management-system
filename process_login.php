@@ -23,8 +23,10 @@ if ($user && password_verify($password, $user['password'])) {
     $ip = $_SERVER['REMOTE_ADDR'];
     $log->bind_param("is", $user['user_id'], $ip);
     $log->execute();
-
-    header("Location: index.php");
+       header("Location: index.php");
+    exit();
+} else {
+    header("Location: login.php?error=1");
     exit();
 }
 ?>
