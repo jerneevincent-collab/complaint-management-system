@@ -19,7 +19,7 @@ if ($conn->connect_error) {
             --lamp-shade: #f5f0e6;
             --lamp-base: #d1ccc2;
             --glow-color: rgba(255, 214, 110, 0.3);
-            --accent-color: #d4a373;
+                        --accent-color: #2f6fed;
             --on: 0;
             --transition: 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
@@ -170,7 +170,7 @@ if ($conn->connect_error) {
         .login-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #bf953f, #fcf6ba, #b38728, #fcf6ba, #aa771c);
+            background: linear-gradient(135deg, #0a2540, #2f6fed);
             border: none;
             border-radius: 15px;
             font-weight: 600;
@@ -181,9 +181,9 @@ if ($conn->connect_error) {
             font-size: 1rem;
         }
 
-        .login-btn:hover {
+             .login-btn:hover {
             transform: scale(1.02);
-            background: var(--lamp-shade);
+            background: linear-gradient(135deg, #2f6fed, #0a2540);
         }
 
         .error-msg {
