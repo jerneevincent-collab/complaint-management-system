@@ -129,7 +129,7 @@ $currentIndex = $complaint ? array_search($complaint['status'], $statusSteps) : 
             <p class="not-found">No complaint found with that number. Please check and try again.</p>
         <?php endif; ?>
 
-        <?php if ($complaint): ?>
+               <?php if ($complaint): ?>
             <div class="complaint-summary">
                 <strong>Subject:</strong> <?php echo htmlspecialchars($complaint['subject']); ?><br>
                 <strong>Category:</strong> <?php echo htmlspecialchars($complaint['category_name']); ?><br>
@@ -144,6 +144,10 @@ $currentIndex = $complaint ? array_search($complaint['status'], $statusSteps) : 
                 <?php endforeach; ?>
             </ul>
         <?php endif; ?>
+
+        <p style="text-align: center; margin-top: 24px; padding-top: 18px; border-top: 1px solid #e2e8f0; font-size: 13px;">
+            <a href="login.php" style="color: #0a2540; font-weight: 600;">&larr; Back to Login</a>
+        </p>
     </div>
 </body>
 </html>

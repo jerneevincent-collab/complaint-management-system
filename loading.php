@@ -1,12 +1,15 @@
 <?php
 session_start();
-session_destroy();
+if (!isset($_SESSION['user_id'])) {
+    header("Location: login.php");
+    exit();
+}
 ?>
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Logging out...</title>
-    <meta http-equiv="refresh" content="2;url=login.php">
+    <title>Loading...</title>
+    <meta http-equiv="refresh" content="2;url=index.php">
     <style>
         body {
             margin: 0;
@@ -19,7 +22,9 @@ session_destroy();
             overflow: hidden;
         }
 
-        .loading-wrap { text-align: center; }
+        .loading-wrap {
+            text-align: center;
+        }
 
         .logo-ring {
             position: relative;
@@ -33,6 +38,7 @@ session_destroy();
             height: 100%;
             border-radius: 50%;
             animation: pulse 1.6s ease-in-out infinite;
+            box-shadow: 0 0 0 0 rgba(47, 111, 237, 0.5);
         }
 
         @keyframes pulse {
@@ -53,7 +59,9 @@ session_destroy();
             animation: spin 1s linear infinite;
         }
 
-        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
 
         .loading-text {
             color: #fff;
@@ -75,7 +83,9 @@ session_destroy();
             40% { opacity: 1; }
         }
 
-        @keyframes fadeIn { to { opacity: 1; } }
+        @keyframes fadeIn {
+            to { opacity: 1; }
+        }
     </style>
 </head>
 <body>
@@ -84,7 +94,7 @@ session_destroy();
             <div class="spinner-ring"></div>
             <img src="assets/cms-logo.png" alt="CMS Logo">
         </div>
-        <p class="loading-text">Logging out<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
+        <p class="loading-text">Loading your dashboard<span class="loading-dots"><span>.</span><span>.</span><span>.</span></span></p>
     </div>
 </body>
 </html>
