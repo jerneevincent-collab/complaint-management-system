@@ -2,7 +2,7 @@
 <html>
 <head>
     <title>Complaint Management System</title>
-    <meta http-equiv="refresh" content="4;url=login.php">
+    <meta http-equiv="refresh" content="7;url=login.php">
     <style>
         body {
             margin: 0;
