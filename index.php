@@ -165,7 +165,6 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         }
         .submenu li a:hover { background: rgba(47,111,237,0.15); color: #fff; padding-left: 44px; }
 
-        /* Tooltip for collapsed state (desktop only) */
         .tooltip {
             position: absolute;
             left: calc(100% + 12px);
@@ -192,7 +191,6 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
             border-top: 1px solid rgba(255,255,255,0.08);
         }
 
-        /* ===== TOP BAR (mobile) ===== */
         .mobile-topbar {
             display: none;
             background: var(--navy);
@@ -219,7 +217,6 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         }
         .overlay.show { display: block; opacity: 1; }
 
-        /* ===== MAIN CONTENT ===== */
         .main-content {
             margin-left: var(--sidebar-collapsed);
             transition: margin-left 0.4s ease;
@@ -263,7 +260,6 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         .welcome-card h2 { color: var(--navy); margin: 0 0 8px; }
         .welcome-card p { color: #64748b; margin: 0; font-size: 14px; }
 
-        /* ===== RESPONSIVE: MOBILE ===== */
         @media (max-width: 768px) {
             .sidebar {
                 width: 260px;
@@ -274,9 +270,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
             .sidebar.mobile-open .nav-label,
             .sidebar.mobile-open .chevron,
             .sidebar.mobile-open .brand-name { opacity: 1; pointer-events: auto; }
-            .sidebar.mobile-open .nav-item.expanded .submenu { max-height: 300px; }
             .sidebar .submenu { max-height: 0 !important; }
-            .sidebar.mobile-open .submenu { max-height: unset; }
             .sidebar.mobile-open .nav-item.expanded .submenu { max-height: 300px !important; }
 
             #sidebarToggle { display: none; }
@@ -303,7 +297,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         <ul class="nav-list">
             <li class="nav-item">
                 <div class="nav-link" data-toggle="complainant">
-                    <img src="assets/complaint-logo.png" alt="">
+                    <img src="assets/complaintstatus.png" alt="">
                     <span class="nav-label">Complainant Mgmt</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -316,7 +310,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="complaint">
-                    <img src="assets/complaint-logo.png" alt="">
+                    <img src="assets/complaintmanagement.png" alt="">
                     <span class="nav-label">Complaint Mgmt</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -331,7 +325,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="assignment">
-                    <img src="assets/assignment-logo.png" alt="">
+                    <img src="assets/assignment.png" alt="">
                     <span class="nav-label">Assignment</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -345,7 +339,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="investigation">
-                    <img src="assets/investigation-logo.png" alt="">
+                    <img src="assets/investigation.png" alt="">
                     <span class="nav-label">Investigation</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -358,7 +352,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="action">
-                    <img src="assets/action-logo.png" alt="">
+                    <img src="assets/action.png" alt="">
                     <span class="nav-label">Action</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -371,7 +365,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="resolution">
-                    <img src="assets/resolution-logo.png" alt="">
+                    <img src="assets/resolution.png" alt="">
                     <span class="nav-label">Resolution</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -383,7 +377,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="reports">
-                    <img src="assets/reports-logo.png" alt="">
+                    <img src="assets/reportdashboard.png" alt="">
                     <span class="nav-label">Reports</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -401,7 +395,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
             <li class="nav-item">
                 <div class="nav-link" data-toggle="documentation">
-                    <img src="assets/documentation-logo.png" alt="">
+                    <img src="assets/documentation.png" alt="">
                     <span class="nav-label">Documentation</span>
                     <span class="chevron">&#9656;</span>
                 </div>
@@ -422,9 +416,16 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 
         <div class="sidebar-footer">
             <div class="nav-item">
+                <a href="manage_account.php" class="nav-link" style="text-decoration:none;">
+                    <img src="assets/account.png" alt="">
+                    <span class="nav-label">My Account</span>
+                </a>
+                <span class="tooltip">My Account</span>
+            </div>
+            <div class="nav-item">
                 <a href="logout.php" class="nav-link" style="text-decoration:none;">
-                    <img src="assets/account-logo.png" alt="">
-                    <span class="nav-label">Logout</span>
+                    <img src="assets/reportdashboard.png" alt="" style="opacity:0; width:0;">
+                    <span class="nav-label" style="margin-left:36px;">Logout</span>
                 </a>
                 <span class="tooltip">Logout</span>
             </div>
@@ -442,8 +443,10 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
     <div class="main-content" id="mainContent">
         <div class="desktop-topbar">
             <div class="user-badge">
-                <img src="assets/account-logo.png" alt="">
-                <?php echo htmlspecialchars($_SESSION['full_name']); ?>
+                <a href="manage_account.php" style="display:flex; align-items:center; gap:8px; color: var(--navy); text-decoration:none;">
+                    <img src="assets/account.png" alt="">
+                    <?php echo htmlspecialchars($_SESSION['full_name']); ?>
+                </a>
                 <a href="logout.php">Logout</a>
             </div>
         </div>
@@ -464,7 +467,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         </div>
 
         <div class="welcome-card">
-            <h2>Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?> 👋</h2>
+            <h2>Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?> </h2>
             <p>Use the sidebar to navigate through Complainant Management, Complaint Management, Assignment, Investigation, Action, Resolution, Reports, and Documentation.</p>
         </div>
     </div>
@@ -475,12 +478,10 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         const hamburgerBtn = document.getElementById('hamburgerBtn');
         const overlay = document.getElementById('overlay');
 
-        // Desktop expand/collapse
         sidebarToggle.addEventListener('click', () => {
             sidebar.classList.toggle('open');
         });
 
-        // Mobile off-canvas
         hamburgerBtn.addEventListener('click', () => {
             sidebar.classList.add('mobile-open');
             overlay.classList.add('show');
@@ -490,14 +491,12 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
             overlay.classList.remove('show');
         });
 
-        // Submenu accordion
         document.querySelectorAll('.nav-link[data-toggle]').forEach(link => {
             link.addEventListener('click', () => {
                 const isMobile = window.innerWidth <= 768;
                 const isOpenState = isMobile ? sidebar.classList.contains('mobile-open') : sidebar.classList.contains('open');
 
                 if (!isOpenState) {
-                    // Auto-expand sidebar first when clicking an icon while collapsed
                     if (isMobile) {
                         sidebar.classList.add('mobile-open');
                         overlay.classList.add('show');
