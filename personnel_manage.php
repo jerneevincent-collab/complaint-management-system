@@ -130,12 +130,13 @@ $result = $conn->query(
             background: #fff;
             border-radius: 14px;
             box-shadow: 0 6px 20px rgba(10,37,64,0.06);
-            overflow: hidden;
+            overflow-x: auto;
             opacity: 0;
             animation: fadeUp 0.5s ease 0.1s forwards;
         }
-        table { margin: 0; box-shadow: none; }
+        .table-card table { margin: 0; box-shadow: none; min-width: 650px; }
         th { background: var(--navy); }
+        th:last-child, td:last-child { white-space: nowrap; }
 
         .status-pill {
             display: inline-block;
@@ -144,6 +145,7 @@ $result = $conn->query(
             font-size: 11px;
             font-weight: 600;
             text-transform: uppercase;
+            white-space: nowrap;
         }
         .status-active { background: #d1fae5; color: #065f46; }
         .status-inactive { background: #fee2e2; color: #991b1b; }
@@ -151,6 +153,10 @@ $result = $conn->query(
         .toggle-link {
             font-size: 13px;
             font-weight: 600;
+        }
+
+        @media (max-width: 900px) {
+            .content-grid { grid-template-columns: 1fr; }
         }
     </style>
 </head>
