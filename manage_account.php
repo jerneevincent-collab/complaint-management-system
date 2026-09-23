@@ -45,59 +45,116 @@ $user = $stmt->get_result()->fetch_assoc();
 <html>
 <head>
     <title>My Account</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css">
     <style>
         :root { --navy: #0a2540; --accent: #2f6fed; }
-        body { background: #f4f7fb; }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            background: #f4f7fb !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+            min-height: 100vh;
+        }
 
         .topbar {
-            background: var(--navy); color: #fff; display: flex;
-            align-items: center; justify-content: space-between; padding: 14px 30px;
+            background: var(--navy) !important;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 14px 30px;
+            width: 100% !important;
+            max-width: none !important;
         }
-        .topbar a { color: #cbd5e1; font-weight: 500; }
-        .topbar a:hover { color: #fff; }
+        .topbar a { color: #cbd5e1; font-weight: 500; text-decoration: none; }
+        .topbar a:hover { color: #fff; text-decoration: underline; }
 
-        .page-wrap { max-width: 560px; margin: 0 auto; padding: 30px 20px; }
+        /* INAYOS: Siniguradong saktong sukat lang sa gitna (520px max-width) */
+        .page-wrap {
+            max-width: 520px !important;
+            width: 90% !important;
+            margin: 40px auto !important;
+            padding: 0 !important;
+        }
 
         .account-card {
-            background: #fff; border-radius: 16px;
-            box-shadow: 0 10px 30px rgba(10,37,64,0.08); padding: 30px;
-            opacity: 0; transform: translateY(20px);
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(10,37,64,0.08);
+            padding: 30px;
+            width: 100% !important;
+            max-width: 100% !important;
+            opacity: 0;
+            transform: translateY(20px);
             animation: fadeUp 0.5s ease forwards;
         }
         @keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
 
         .account-avatar {
-            width: 72px; height: 72px; margin: 0 auto 12px; display: block;
+            width: 72px !important;
+            height: 72px !important;
+            margin: 0 auto 12px !important;
+            display: block;
         }
-        .account-card h2 { color: var(--navy); text-align: center; margin: 0 0 4px; }
+        .account-card h2 { color: var(--navy); text-align: center; margin: 0 0 4px; font-size: 22px; }
         .account-role {
             text-align: center; color: #64748b; font-size: 13px; margin-bottom: 24px;
         }
 
-        .account-card form { box-shadow: none; padding: 0; max-width: 100%; margin: 0; background: none; }
+        .account-card form {
+            box-shadow: none !important;
+            padding: 0 !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            background: none !important;
+        }
         .account-card label {
-            font-size: 12px; font-weight: 600; color: var(--navy);
-            text-transform: uppercase; letter-spacing: 0.03em;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--navy);
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+            margin-top: 14px;
+            display: block;
         }
         .account-card input {
-            background: #f4f7fb; border: 1px solid #e2e8f0; border-radius: 8px;
+            background: #f4f7fb;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
             font-family: 'Poppins', sans-serif;
+            padding: 10px 12px;
+            width: 100%;
         }
         .account-card input:focus { outline: none; border-color: var(--accent); background: #fff; }
 
         .password-section {
-            margin-top: 10px; padding-top: 16px; border-top: 1px solid #e2e8f0;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #e2e8f0;
         }
-        .password-section p { font-size: 12px; color: #94a3b8; margin: 0 0 4px; }
+        .password-section p { font-size: 12px; color: #94a3b8; margin: 0 0 8px; }
 
         .account-card button {
-            background: var(--accent); width: 100%; border: none; padding: 13px;
-            border-radius: 8px; color: #fff; font-weight: 700; cursor: pointer; transition: 0.2s;
+            background: var(--accent);
+            width: 100%;
+            border: none;
+            padding: 13px;
+            border-radius: 8px;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s;
+            margin-top: 20px;
         }
         .account-card button:hover { background: var(--navy); }
 
-        .success-msg { color: #16a34a !important; text-align: center; }
+        .success-msg { color: #16a34a !important; text-align: center; font-size: 14px; margin-bottom: 12px; }
     </style>
 </head>
 <body>

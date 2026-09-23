@@ -11,9 +11,9 @@ if ($conn->connect_error) {
     die("Connection failed: " . $conn->connect_error);
 }
 
-$total = $conn->query("SELECT COUNT(*) AS c FROM complaints")->fetch_assoc()['c'];
-$open = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status NOT IN ('Resolved','Closed')")->fetch_assoc()['c'];
-$closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Closed'")->fetch_assoc()['c'];
+$total =$conn->query("SELECT COUNT(*) AS c FROM complaints")->fetch_assoc()['c'];
+$open =$conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status NOT IN ('Resolved','Closed')")->fetch_assoc()['c'];
+$closed =$conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Closed'")->fetch_assoc()['c'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -23,17 +23,82 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
     <link rel="stylesheet" href="assets/style.css">
     <style>
         :root { --navy: #0a2540; --accent: #2f6fed; }
-        * { box-sizing: border-box; }
-        body { background: #f4f7fb; margin: 0; }
 
-        /* ===== TOP BAR ===== */
+        /* ===== FULLSCREEN SPLASH OVERLAY ===== */
+        #splashOverlay {
+            position: fixed !important;
+            top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: var(--navy) !important;
+            z-index: 99999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.6s ease-out, opacity 0.6s ease-out, visibility 0.6s;
+        }
+
+        .splash-logo-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            z-index: 100000;
+        }
+
+        .splash-logo-container img#splashLogo {
+            width: 130px !important;
+            height: 130px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            transform-origin: center center;
+        }
+
+        .splash-text {
+            color: #ffffff;
+            font-size: 18px;
+            font-weight: 500;
+            margin-top: 20px;
+            letter-spacing: 0.5px;
+            transition: opacity 0.3s ease;
+        }
+
+        .splash-loader {
+            width: 32px;
+            height: 32px;
+            margin-top: 16px;
+            border: 3px solid rgba(255,255,255,0.2);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s infinite linear;
+            transition: opacity 0.3s ease;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        #splashOverlay.hide-splash {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+            background: transparent !important;
+        }
+
+        /* ===== TOPBAR ===== */
         .topbar {
-            background: var(--navy);
+            background: var(--navy) !important;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
             padding: 12px 24px;
+            width: 100% !important;
             position: sticky;
             top: 0;
             z-index: 100;
@@ -45,7 +110,15 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         }
         #menuBtn:hover { background: rgba(255,255,255,0.1); }
         .topbar .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
-        .topbar .brand img { width: 32px !important; height: 32px !important; border-radius: 50%; object-fit: cover; }
+        
+        .topbar .brand img#targetLogo { 
+            width: 42px !important; 
+            height: 42px !important; 
+            border-radius: 50%; 
+            object-fit: cover;
+            opacity: 0; 
+            transition: opacity 0.2s ease;
+        }
 
         .user-badge {
             display: flex; align-items: center; gap: 10px;
@@ -57,14 +130,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         .user-badge .divider { color: #64748b; }
         .user-badge .logout-link { color: #fca5a5; font-weight: 500; }
 
-        /* ===== OVERLAY ===== */
-        .overlay {
-            position: fixed; inset: 0; background: rgba(0,0,0,0.45);
-            z-index: 199; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
-        }
-        .overlay.show { opacity: 1; pointer-events: auto; }
-
-        /* ===== SLIDE-IN PANEL ===== */
+        /* ===== SIDE PANEL ===== */
         .side-panel {
             position: fixed;
             top: 0; left: 0;
@@ -144,7 +210,7 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         .panel-footer a.logout { color: #dc2626; }
 
         /* ===== MAIN CONTENT ===== */
-        .main-content { padding: 30px; max-width: 1100px; margin: 0 auto; }
+        .main-content { padding: 30px 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
 
         .kpi-row { display: flex; gap: 16px; margin-bottom: 30px; flex-wrap: wrap; }
         .kpi-card {
@@ -176,11 +242,21 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
 </head>
 <body>
 
+    <!-- FULLSCREEN SPLASH OVERLAY -->
+    <div id="splashOverlay">
+        <div class="splash-logo-container" id="splashLogoContainer">
+            <img src="assets/cms-logo.png" alt="CMS Logo" id="splashLogo">
+            <div class="splash-text" id="splashText">Loading your dashboard...</div>
+            <div class="splash-loader" id="splashLoader"></div>
+        </div>
+    </div>
+
+    <!-- FULL WIDTH TOPBAR -->
     <div class="topbar">
         <div class="left">
             <button id="menuBtn">&#9776;</button>
             <div class="brand">
-                <img src="assets/cms-logo.png" alt="CMS">
+                <img src="assets/cms-logo.png" alt="CMS" id="targetLogo">
                 <span>Complaint Management System</span>
             </div>
         </div>
@@ -330,12 +406,43 @@ $closed = $conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Clo
         </div>
 
         <div class="welcome-card">
-            <h2>Welcome, <?php echo htmlspecialchars($_SESSION['full_name']); ?> 👋</h2>
+            <h2>Welcome Back, <?php echo htmlspecialchars($_SESSION['full_name']); ?> </h2>
             <p>Click the menu icon in the top-left to navigate through Complainant Management, Complaint Management, Assignment, Investigation, Action, Resolution, Reports, and Documentation.</p>
         </div>
     </div>
 
     <script>
+        window.addEventListener('DOMContentLoaded', () => {
+            const splashText = document.getElementById('splashText');
+            const splashLoader = document.getElementById('splashLoader');
+            const splashLogo = document.getElementById('splashLogo');
+            const targetLogo = document.getElementById('targetLogo');
+            const splashOverlay = document.getElementById('splashOverlay');
+
+            setTimeout(() => {
+                if (splashText) splashText.style.opacity = '0';
+                if (splashLoader) splashLoader.style.opacity = '0';
+
+                const startRect = splashLogo.getBoundingClientRect();
+                const targetRect = targetLogo.getBoundingClientRect();
+
+                const deltaX = targetRect.left + (targetRect.width / 2) - (startRect.left + (startRect.width / 2));
+                const deltaY = targetRect.top + (targetRect.height / 2) - (startRect.top + (startRect.height / 2));
+
+                splashLogo.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
+                splashLogo.style.width = `${targetRect.width}px`;
+                splashLogo.style.height = `${targetRect.height}px`;
+
+                if (splashOverlay) splashOverlay.style.background = 'transparent';
+
+                setTimeout(() => {
+                    if (targetLogo) targetLogo.style.opacity = '1';
+                    if (splashOverlay) splashOverlay.classList.add('hide-splash');
+                }, 800);
+
+            }, 600);
+        });
+
         const panel = document.getElementById('sidePanel');
         const overlay = document.getElementById('overlay');
         const menuBtn = document.getElementById('menuBtn');
