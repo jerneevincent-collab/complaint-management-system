@@ -38,7 +38,7 @@ $evidenceResult = $evidenceList->get_result();
             --bg: #f4f7fb;
         }
         * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
-body { margin: 0; background: red; color: #1b2733; }
+        body { margin: 0; background: var(--bg); color: #1b2733; }
 
         .topbar {
             background: var(--navy);
@@ -71,24 +71,33 @@ body { margin: 0; background: red; color: #1b2733; }
             padding: 0 !important;
         }
         body .page-wrap {
+            position: relative;
             width: 100% !important;
             margin: 0 !important;
-            text-align: center !important;
-            padding: 30px 20px !important;
+            padding: 30px 0 60px 0 !important;
         }
-        body .form-card, body .table-card {
-            display: inline-block !important;
-            text-align: left !important;
-            width: 860px !important;
-            max-width: calc(100% - 40px) !important;
-            margin: 0 auto 24px auto !important;
+        .content-wrap {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 30px;
+            width: 860px;
+            max-width: calc(100% - 40px);
+        }
+        .form-card, .table-card {
+            width: 100%;
         }
 
         .form-card, .table-card {
-            padding: 28px 30px;
             margin-bottom: 24px;
             opacity: 0;
             animation: fadeUp 0.5s ease forwards;
+        }
+        .table-card {
+            padding: 28px 30px;
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 8px 24px rgba(10, 37, 64, 0.07);
         }
         @keyframes fadeUp {
             from { opacity: 0; transform: translateY(12px); }
@@ -102,7 +111,7 @@ body { margin: 0; background: red; color: #1b2733; }
             color: var(--navy);
             margin-bottom: 6px;
         }
-        .form-card form { margin: 0 auto; }
+        .form-card form { margin: 0 auto; max-width: 100%; }
         .form-group { margin-bottom: 18px; }
 
         input[type="file"] {
@@ -161,6 +170,7 @@ body { margin: 0; background: red; color: #1b2733; }
     </div>
 
     <div class="page-wrap">
+      <div class="content-wrap" style="position:absolute; left:50%; transform:translateX(-50%); width:860px; max-width:calc(100% - 40px);">
         <div class="form-card">
             <?php if (isset($_GET['status']) && $_GET['status'] == 'success'): ?>
                 <p style="color:green;">Evidence uploaded successfully!</p>
@@ -201,6 +211,7 @@ body { margin: 0; background: red; color: #1b2733; }
                 <p class="empty-note">No evidence uploaded yet.</p>
             <?php endif; ?>
         </div>
+      </div>
     </div>
 </body>
 </html>
