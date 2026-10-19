@@ -86,23 +86,11 @@ $result = $conn->query("SELECT * FROM complaint_categories ORDER BY category_id"
         }
         .topbar .back-link:hover { color: #fff; }
 
-        html, body {
-            margin: 0 !important;
-            padding: 0 !important;
-        }
         body .page-wrap {
-            position: relative;
             width: 100% !important;
-            margin: 0 !important;
-            padding: 30px 0 60px 0 !important;
-        }
-        .content-wrap {
-            position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            top: 30px;
-            width: 860px;
-            max-width: calc(100% - 40px);
+            max-width: 860px !important;
+            margin: 0 auto !important;
+            padding: 30px 20px 60px !important;
         }
 
         .form-card, .table-card {
@@ -192,7 +180,6 @@ $result = $conn->query("SELECT * FROM complaint_categories ORDER BY category_id"
     </div>
 
     <div class="page-wrap">
-      <div class="content-wrap">
         <div class="form-card">
             <form method="POST">
                 <input type="text" name="category_name" placeholder="New category name" required>
@@ -235,7 +222,6 @@ $result = $conn->query("SELECT * FROM complaint_categories ORDER BY category_id"
                 <p class="empty-note">No categories yet.</p>
             <?php endif; ?>
         </div>
-      </div>
     </div>
 </body>
 </html>

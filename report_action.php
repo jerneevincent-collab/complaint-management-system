@@ -30,33 +30,137 @@ $byPersonnel = $conn->query(
 <html>
 <head>
     <title>Action Monitoring Report</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/style.css">
+    <style>
+        :root { --navy:#0a2540; --accent:#2f6fed; --bg:#f4f7fb; }
+        * { box-sizing: border-box; font-family: 'Poppins', sans-serif; }
+        body { color:#1b2733; }
+
+        .topbar {
+            background: var(--navy);
+            color:#fff;
+            position:relative;
+            display:flex;
+            align-items:center;
+            padding:14px 30px;
+        }
+        .topbar h2 {
+            position:absolute;
+            left:50%;
+            transform:translateX(-50%);
+            margin:0;
+            color:#fff;
+            font-size:18px;
+            font-weight:600;
+            white-space:nowrap;
+        }
+        .topbar .back-link { color:#fff; text-decoration:none; font-size:14px; z-index:1; }
+        .topbar .back-link:hover { color:#fff; text-decoration:none; }
+
+        body .page-wrap {
+            width:100% !important;
+            max-width:860px !important;
+            margin:0 auto !important;
+            padding:30px 20px 60px !important;
+        }
+
+        .kpi-container {
+            display:grid;
+            grid-template-columns:repeat(auto-fit, minmax(150px, 1fr));
+            gap:16px;
+            margin-bottom:24px;
+        }
+        .kpi-card {
+            background:#fff;
+            border-radius:16px;
+            padding:20px 18px;
+            text-align:center;
+            box-shadow:0 8px 24px rgba(10,37,64,0.07);
+            border-top:4px solid var(--accent);
+            opacity:0;
+            animation:fadeUp 0.5s ease forwards;
+        }
+        .kpi-card h3 { margin:0; font-size:30px; color:var(--navy); font-weight:700; }
+        .kpi-card p { margin:6px 0 0; font-size:13px; color:#6b7787; }
+        .kpi-card.warn { border-top-color:#e0a82e; }
+        .kpi-card.danger { border-top-color:#d64545; }
+        .kpi-card.good { border-top-color:#0f766e; }
+
+        .table-card {
+            background:#fff;
+            border-radius:16px;
+            padding:28px 30px;
+            margin-bottom:24px;
+            box-shadow:0 8px 24px rgba(10,37,64,0.07);
+            opacity:0;
+            animation:fadeUp 0.5s ease forwards;
+        }
+        .table-card h3 { margin:0 0 16px 0; color:var(--navy); font-size:16px; }
+        .table-scroll { overflow-x:auto; }
+        .table-card table { width:100%; margin:0; box-shadow:none; border-radius:0; border-collapse:collapse; font-size:13px; }
+        .table-card th {
+            background:var(--navy);
+            color:#fff;
+            text-align:left;
+            padding:10px 12px;
+            text-transform:none;
+            font-size:13px;
+            letter-spacing:0;
+        }
+        .table-card td { padding:10px 12px; border-bottom:1px solid #eef1f5; font-size:13px; }
+        .table-card tr:last-child td { border-bottom:none; }
+        .table-card th:not(:first-child), .table-card td:not(:first-child) { text-align:center; width:110px; }
+
+        .empty-note { color:#6b7787; font-size:13px; margin:0; }
+
+        @keyframes fadeUp {
+            from { opacity:0; transform:translateY(12px); }
+            to { opacity:1; transform:translateY(0); }
+        }
+        @media (max-width:640px) { .topbar h2 { font-size:15px; } }
+    </style>
 </head>
 <body>
-    <h2>Action Monitoring Report</h2>
-    <p><a href="index.php">&larr; Back to Home</a></p>
+    <div class="topbar">
+        <a class="back-link" href="index.php">&larr; Back to Home</a>
+        <h2>Action Monitoring Report</h2>
+    </div>
 
-    <table border="1" cellpadding="8" cellspacing="0">
-        <tr><th>Pending Actions</th><td><?php echo $pending; ?></td></tr>
-        <tr><th>Completed Actions</th><td><?php echo $completed; ?></td></tr>
-        <tr><th>Overdue Actions</th><td><?php echo $overdue; ?></td></tr>
-    </table>
+    <div class="page-wrap">
 
-    <h3>Actions by Responsible Personnel</h3>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <tr>
-            <th>Personnel</th>
-            <th>Total</th>
-            <th>Completed</th>
-            <th>Pending</th>
-        </tr>
-        <?php while ($row = $byPersonnel->fetch_assoc()): ?>
-        <tr>
-            <td><?php echo htmlspecialchars($row['full_name']); ?></td>
-            <td><?php echo $row['total']; ?></td>
-            <td><?php echo $row['completed']; ?></td>
-            <td><?php echo $row['pending']; ?></td>
-        </tr>
-        <?php endwhile; ?>
-    </table>
+        <div class="kpi-container">
+            <div class="kpi-card warn"><h3><?php echo $pending; ?></h3><p>Pending Actions</p></div>
+            <div class="kpi-card good"><h3><?php echo $completed; ?></h3><p>Completed Actions</p></div>
+            <div class="kpi-card danger"><h3><?php echo $overdue; ?></h3><p>Overdue Actions</p></div>
+        </div>
+
+        <div class="table-card">
+            <h3>Actions by Responsible Personnel</h3>
+            <?php if ($byPersonnel->num_rows > 0): ?>
+            <div class="table-scroll">
+                <table>
+                    <tr>
+                        <th>Personnel</th>
+                        <th>Total</th>
+                        <th>Completed</th>
+                        <th>Pending</th>
+                    </tr>
+                    <?php while ($row = $byPersonnel->fetch_assoc()): ?>
+                    <tr>
+                        <td><?php echo htmlspecialchars($row['full_name']); ?></td>
+                        <td><?php echo $row['total']; ?></td>
+                        <td><?php echo $row['completed']; ?></td>
+                        <td><?php echo $row['pending']; ?></td>
+                    </tr>
+                    <?php endwhile; ?>
+                </table>
+            </div>
+            <?php else: ?><p class="empty-note">No data yet.</p><?php endif; ?>
+        </div>
+
+    </div>
 </body>
 </html>
