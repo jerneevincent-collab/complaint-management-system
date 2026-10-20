@@ -45,7 +45,7 @@ while ($r = $statusRes->fetch_assoc()) {
     <title>Dashboard - Complaint Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" async></script>
     <style>
         :root { --navy: #0a2540; --accent: #2f6fed; }
 
@@ -55,7 +55,7 @@ while ($r = $statusRes->fetch_assoc()) {
             top: 0 !important; left: 0 !important; right: 0 !important; bottom: 0 !important;
             width: 100vw !important;
             height: 100vh !important;
-            background: var(--navy) !important;
+            background: radial-gradient(circle at 50% 42%, rgba(47,111,237,0.35), transparent 55%), var(--navy) !important;
             z-index: 99999;
             display: flex;
             flex-direction: column;
@@ -71,15 +71,20 @@ while ($r = $statusRes->fetch_assoc()) {
             justify-content: center;
             position: relative;
             z-index: 100000;
+            margin-bottom: 152px; /* keeps the logo in the same spot as loading.php */
         }
+        #splashText, #splashLoader { display: none !important; } /* loading.php already shows the message */
 
         .splash-logo-container img#splashLogo {
             width: 130px !important;
             height: 130px !important;
             border-radius: 50%;
             object-fit: cover;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.3);
-            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            background: #ffffff;
+            padding: 6px;
+            box-sizing: border-box;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.4);
+            transition: transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), width 0.8s cubic-bezier(0.4, 0, 0.2, 1), height 0.8s cubic-bezier(0.4, 0, 0.2, 1), padding 0.8s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.8s ease;
             transform-origin: center center;
         }
 
@@ -117,43 +122,113 @@ while ($r = $statusRes->fetch_assoc()) {
 
         /* ===== TOPBAR ===== */
         .topbar {
-            background: var(--navy) !important;
+            background: linear-gradient(120deg, #0a2540 0%, #0f3560 55%, #1a4f94 100%) !important;
             color: #fff;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 24px;
+            min-height: 68px;
+            padding: 0 24px;
             width: 100% !important;
             position: sticky;
             top: 0;
             z-index: 100;
+            animation: topbarIn 0.45s ease both;
+            transition: min-height 0.25s ease, background 0.25s ease, box-shadow 0.25s ease;
         }
-        .topbar .left { display: flex; align-items: center; gap: 14px; }
-        #menuBtn {
-            background: none; border: none; color: #fff; font-size: 22px;
-            cursor: pointer; padding: 4px 8px; border-radius: 6px; transition: background 0.2s;
+        @keyframes topbarIn { from { transform: translateY(-100%); } to { transform: translateY(0); } }
+
+        /* glowing line under the topbar */
+        .topbar::after {
+            content: "";
+            position: absolute; left: 0; right: 0; bottom: 0; height: 2px;
+            background: linear-gradient(90deg, transparent, #2f6fed, #8dbaff, #2f6fed, transparent);
+            background-size: 200% 100%;
+            animation: shimmer 4s linear infinite;
+            opacity: 0.9;
+            pointer-events: none;
         }
-        #menuBtn:hover { background: rgba(255,255,255,0.1); }
-        .topbar .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; font-size: 15px; }
-        
-        .topbar .brand img#targetLogo { 
-            width: 42px !important; 
-            height: 42px !important; 
-            border-radius: 50%; 
-            object-fit: cover;
-            opacity: 0; 
-            transition: opacity 0.2s ease;
+        @keyframes shimmer { from { background-position: 200% 0; } to { background-position: -200% 0; } }
+
+        /* shrinks + blurs when you scroll down */
+        .topbar.scrolled {
+            min-height: 58px;
+            background: linear-gradient(120deg, rgba(10,37,64,0.88), rgba(26,79,148,0.88)) !important;
+            -webkit-backdrop-filter: blur(10px);
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 24px rgba(10,37,64,0.28);
         }
 
+        .topbar .left { display: flex; align-items: center; gap: 14px; }
+
+        /* hamburger */
+        #menuBtn {
+            width: 42px; height: 42px; border: none; border-radius: 50%;
+            background: none; cursor: pointer; padding: 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 5px;
+            transition: background 0.2s ease;
+        }
+        #menuBtn span {
+            display: block; width: 22px; height: 2.5px; border-radius: 2px; background: #fff;
+            transition: transform 0.3s ease, opacity 0.2s ease, width 0.25s ease;
+        }
+        #menuBtn span:nth-child(2) { width: 16px; }
+        #menuBtn:hover { background: rgba(255,255,255,0.12); }
+        #menuBtn:hover span:nth-child(2) { width: 22px; }
+        #menuBtn.is-open span:nth-child(1) { transform: translateY(7.5px) rotate(45deg); }
+        #menuBtn.is-open span:nth-child(2) { opacity: 0; }
+        #menuBtn.is-open span:nth-child(3) { transform: translateY(-7.5px) rotate(-45deg); }
+
+        /* logo + title */
+        .topbar a.brand { display: flex; align-items: center; gap: 12px; font-weight: 600; font-size: 15px; color: #fff; text-decoration: none; cursor: pointer; }
+        .topbar a.brand:hover { color: #fff; text-decoration: none; }
+
+        .topbar .brand img#targetLogo {
+            width: 42px !important;
+            height: 42px !important;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #ffffff;
+            padding: 3px;
+            box-shadow: 0 0 0 2px rgba(255,255,255,0.25);
+            opacity: 0;
+            transition: opacity 0.2s ease, transform 0.35s ease, box-shadow 0.2s ease;
+            animation: logoPulse 3.2s ease-out 2.5s infinite;
+        }
+        @keyframes logoPulse {
+            0% { box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 0 rgba(141,186,255,0.55); }
+            70% { box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 10px rgba(141,186,255,0); }
+            100% { box-shadow: 0 0 0 2px rgba(255,255,255,0.25), 0 0 0 0 rgba(141,186,255,0); }
+        }
+        .topbar a.brand:hover img#targetLogo {
+            animation: none;
+            transform: rotate(12deg) scale(1.08);
+            box-shadow: 0 0 0 3px rgba(255,255,255,0.4);
+        }
+
+        /* user badge */
         .user-badge {
             display: flex; align-items: center; gap: 10px;
-            background: rgba(255,255,255,0.08); padding: 6px 14px 6px 6px; border-radius: 30px;
+            background: rgba(255,255,255,0.08); padding: 4px 8px 4px 4px; border-radius: 30px;
             font-size: 14px; color: #fff;
+            border: 1px solid rgba(255,255,255,0.08);
+            transition: background 0.2s ease;
         }
-        .user-badge img { width: 26px !important; height: 26px !important; border-radius: 50%; object-fit: cover; }
+        .user-badge:hover { background: rgba(255,255,255,0.14); }
+        .user-badge .avatar-wrap { position: relative; display: inline-flex; }
+        .user-badge img { width: 34px !important; height: 34px !important; border-radius: 50%; object-fit: cover; background: rgba(255,255,255,0.9); }
+        .user-badge .online-dot {
+            position: absolute; right: -1px; bottom: -1px; width: 10px; height: 10px;
+            background: #22c55e; border: 2px solid #12365e; border-radius: 50%;
+        }
         .user-badge a { color: #fff; text-decoration: none; }
+        .user-badge a:hover { text-decoration: none; }
         .user-badge .divider { color: #64748b; }
-        .user-badge .logout-link { color: #fca5a5; font-weight: 500; }
+        .user-badge .logout-link {
+            color: #fca5a5; font-weight: 500; padding: 5px 14px; border-radius: 999px;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+        .user-badge .logout-link:hover { background: #dc2626; color: #fff; }
 
         /* ===== SIDE PANEL ===== */
         .side-panel {
@@ -350,15 +425,18 @@ while ($r = $statusRes->fetch_assoc()) {
     <!-- FULL WIDTH TOPBAR -->
     <div class="topbar">
         <div class="left">
-            <button id="menuBtn">&#9776;</button>
-            <div class="brand">
+            <button id="menuBtn" aria-label="Open menu"><span></span><span></span><span></span></button>
+            <a class="brand" href="index.php" title="Go to Home">
                 <img src="assets/cms-logo.png" alt="CMS" id="targetLogo"<?php if (!$showSplash) echo ' style="opacity:1;"'; ?>>
                 <span>Complaint Management System</span>
-            </div>
+            </a>
         </div>
         <div class="user-badge">
             <a href="manage_account.php" style="display:flex; align-items:center; gap:8px;">
-                <img src="assets/account.png" alt="">
+                <span class="avatar-wrap">
+                    <img src="assets/account.png?v=<?php echo @filemtime(__DIR__ . '/assets/account.png'); ?>" alt="">
+                    <i class="online-dot"></i>
+                </span>
                 <span><?php echo htmlspecialchars($_SESSION['full_name']); ?></span>
             </a>
             <span class="divider">|</span>
@@ -588,8 +666,11 @@ while ($r = $statusRes->fetch_assoc()) {
                 const deltaY = targetRect.top + (targetRect.height / 2) - (startRect.top + (startRect.height / 2));
 
                 splashLogo.style.transform = `translate(${deltaX}px, ${deltaY}px)`;
-                splashLogo.style.width = `${targetRect.width}px`;
-                splashLogo.style.height = `${targetRect.height}px`;
+                // the CSS uses !important on the size, so the shrink must use !important too
+                splashLogo.style.setProperty('width', `${targetRect.width}px`, 'important');
+                splashLogo.style.setProperty('height', `${targetRect.height}px`, 'important');
+                splashLogo.style.padding = '3px';
+                splashLogo.style.boxShadow = '0 0 0 2px rgba(255,255,255,0.25)';
 
                 if (splashOverlay) splashOverlay.style.background = 'transparent';
 
@@ -598,7 +679,7 @@ while ($r = $statusRes->fetch_assoc()) {
                     if (splashOverlay) splashOverlay.classList.add('hide-splash');
                 }, 800);
 
-            }, 600);
+            }, 120);
         });
 
 
@@ -620,7 +701,7 @@ while ($r = $statusRes->fetch_assoc()) {
 
         // ----- Count-up numbers (starts after the splash, if any) -----
         (function () {
-            const startDelay = document.getElementById('splashOverlay') ? 1500 : 300;
+            const startDelay = document.getElementById('splashOverlay') ? 1000 : 300;
             setTimeout(() => {
                 document.querySelectorAll('[data-count]').forEach(el => {
                     const target = parseInt(el.dataset.count, 10) || 0;
@@ -636,8 +717,8 @@ while ($r = $statusRes->fetch_assoc()) {
             }, startDelay);
         })();
 
-        // ----- Status donut chart -----
-        (function () {
+        // ----- Status donut chart (runs after Chart.js has loaded, so it never blocks the splash) -----
+        window.addEventListener('load', function () {
             const canvas = document.getElementById('statusDonut');
             if (!canvas || typeof Chart === 'undefined') return;
             Chart.defaults.font.family = "'Poppins', sans-serif";
@@ -658,7 +739,7 @@ while ($r = $statusRes->fetch_assoc()) {
                     animation: { animateRotate: true, duration: 1200 }
                 }
             });
-        })();
+        });
 
         const panel = document.getElementById('sidePanel');
         const overlay = document.getElementById('overlay');
@@ -666,15 +747,23 @@ while ($r = $statusRes->fetch_assoc()) {
         const closeBtn = document.getElementById('closeBtn');
 
         function openPanel() {
+            menuBtn.classList.add('is-open');
             panel.classList.add('open');
             overlay.classList.add('show');
         }
         function closePanel() {
+            menuBtn.classList.remove('is-open');
             panel.classList.remove('open');
             overlay.classList.remove('show');
         }
 
         menuBtn.addEventListener('click', openPanel);
+
+        // Topbar shrinks + blurs after scrolling
+        const topbarEl = document.querySelector('.topbar');
+        function onScrollTopbar() { topbarEl.classList.toggle('scrolled', window.scrollY > 10); }
+        window.addEventListener('scroll', onScrollTopbar, { passive: true });
+        onScrollTopbar();
         closeBtn.addEventListener('click', closePanel);
         overlay.addEventListener('click', closePanel);
 
