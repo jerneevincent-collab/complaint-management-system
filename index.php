@@ -20,6 +20,14 @@ $open =$conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status NOT IN ('
 $closed =$conn->query("SELECT COUNT(*) AS c FROM complaints WHERE status = 'Closed'")->fetch_assoc()['c'];
 $overdue = $conn->query("SELECT COUNT(*) AS c FROM assignments WHERE due_date < CURDATE() AND status = 'active'")->fetch_assoc()['c'];
 
+// Counts shown as small badges in the side menu (read-only)
+function menuCount($conn, $sql) { $r = $conn->query($sql); if (!$r) return 0; $row = $r->fetch_assoc(); return $row ? (int) $row['c'] : 0; }
+$badgeComplaints  = $open;
+$badgeAssign      = $overdue;
+$badgeInvestigate = menuCount($conn, "SELECT COUNT(*) AS c FROM investigations WHERE status <> 'Completed'");
+$badgeAction      = menuCount($conn, "SELECT COUNT(*) AS c FROM actions WHERE status IN ('Pending','In Progress')");
+$badgeResolution  = menuCount($conn, "SELECT COUNT(*) AS c FROM complaints WHERE status IN ('For Resolution','Action Required')");
+
 $roleId = (int) $_SESSION['role_id'];
 $roleRow = $conn->query("SELECT role_name FROM roles WHERE role_id = $roleId")->fetch_assoc();
 $roleName = $roleRow ? $roleRow['role_name'] : 'User';
@@ -231,83 +239,146 @@ while ($r = $statusRes->fetch_assoc()) {
         .user-badge .logout-link:hover { background: #dc2626; color: #fff; }
 
         /* ===== SIDE PANEL ===== */
+        .overlay {
+            position: fixed; inset: 0; z-index: 190;
+            background: rgba(10,37,64,0.45);
+            -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px);
+            opacity: 0; visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+            /* style.css centers and pads every direct child of body, so reset that here */
+            width: 100% !important; max-width: none !important; margin: 0 !important; padding: 0 !important;
+        }
+        .overlay.show { opacity: 1; visibility: visible; }
+
         .side-panel {
-            position: fixed;
-            top: 0; left: 0;
-            height: 100vh;
-            width: 300px;
-            max-width: 85vw;
-            background: #fff;
-            z-index: 200;
+            position: fixed; top: 0; left: 0; height: 100vh; width: 320px; max-width: 88vw;
+            background: #fff; z-index: 200;
             transform: translateX(-100%);
-            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
-            overflow-y: auto;
-            box-shadow: 4px 0 24px rgba(0,0,0,0.15);
+            transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+            display: flex; flex-direction: column;
+            box-shadow: 6px 0 30px rgba(10,37,64,0.25);
+            width: 320px !important; max-width: 88vw !important; margin: 0 !important; padding: 0 !important;
         }
         .side-panel.open { transform: translateX(0); }
 
+        /* header */
         .panel-header {
+            position: relative; overflow: hidden; flex: 0 0 auto;
             display: flex; align-items: center; gap: 12px;
-            padding: 18px 20px; border-bottom: 1px solid #e2e8f0;
+            padding: 20px 20px 18px;
+            background: linear-gradient(135deg, #0a2540 0%, #12467f 100%);
+            border-bottom: none;
         }
-        .panel-header img { width: 36px !important; height: 36px !important; border-radius: 50%; object-fit: cover; }
-        .panel-header span { font-weight: 700; color: var(--navy); font-size: 15px; }
+        .panel-header::after {
+            content: ""; position: absolute; right: -40px; top: -50px; width: 140px; height: 140px;
+            border-radius: 50%; background: rgba(255,255,255,0.07);
+        }
+        .panel-header img { width: 38px !important; height: 38px !important; border-radius: 50%; object-fit: cover; background: #fff; padding: 2px; box-sizing: border-box; position: relative; z-index: 1; }
+        .panel-header .ph-text { position: relative; z-index: 1; line-height: 1.2; }
+        .panel-header .ph-text b { display: block; color: #fff; font-size: 15px; font-weight: 700; }
+        .panel-header .ph-text small { color: #9fb6d6; font-size: 11.5px; }
         #closeBtn {
-            margin-left: auto; background: none; border: none; font-size: 22px;
-            color: #94a3b8; cursor: pointer;
+            margin-left: auto; position: relative; z-index: 1;
+            width: 32px; height: 32px; border-radius: 50%; border: none; cursor: pointer; padding: 0;
+            background: rgba(255,255,255,0.12); color: #fff; font-size: 20px; line-height: 1;
+            transition: background 0.2s ease, transform 0.3s ease;
         }
-        #closeBtn:hover { color: var(--navy); }
+        #closeBtn:hover { background: rgba(255,255,255,0.25); transform: rotate(90deg); }
 
-        .panel-nav { padding: 10px; }
-        .panel-group { margin-bottom: 4px; }
+        /* search */
+        .panel-search { flex: 0 0 auto; padding: 14px 16px 6px; position: relative; }
+        .panel-search svg { position: absolute; left: 30px; top: 50%; margin-top: -2px; transform: translateY(-50%); width: 16px; height: 16px; stroke: #94a3b8; fill: none; stroke-width: 2; stroke-linecap: round; pointer-events: none; }
+        .panel-search input {
+            width: 100%; box-sizing: border-box; margin: 0; padding: 10px 12px 10px 38px;
+            border: 1.5px solid #e2e8f0; border-radius: 12px; background: #f4f7fb;
+            font-family: 'Poppins', sans-serif; font-size: 13px; color: var(--navy); outline: none;
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+        }
+        .panel-search input:focus { border-color: var(--accent); background: #fff; box-shadow: 0 0 0 4px rgba(47,111,237,0.12); }
 
+        /* scrolling menu area */
+        .panel-scroll { flex: 1 1 auto; overflow-y: auto; overflow-x: hidden; }
+        .panel-scroll::-webkit-scrollbar { width: 6px; }
+        .panel-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 6px; }
+        .panel-nav { padding: 8px 12px 12px; }
+
+        .side-panel.open .panel-nav > * { animation: navIn 0.45s cubic-bezier(0.22, 1, 0.36, 1) both; animation-delay: calc(var(--i, 0) * 45ms + 120ms); }
+        @keyframes navIn { from { opacity: 0; transform: translateX(-22px); } to { opacity: 1; transform: translateX(0); } }
+
+        .home-link {
+            display: flex; align-items: center; gap: 12px; padding: 11px 14px; margin-bottom: 4px;
+            border-radius: 12px; text-decoration: none; font-weight: 600; font-size: 14px; color: var(--navy);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .home-link svg { width: 22px; height: 22px; stroke: var(--accent); fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; flex: 0 0 22px; }
+        .home-link.current { background: #eaf1ff; color: var(--accent); box-shadow: inset 3px 0 0 var(--accent); }
+        .home-link:hover { transform: translateX(3px); text-decoration: none; }
+
+        .panel-group { margin-bottom: 3px; border-radius: 12px; }
         .panel-group-title {
-            display: flex; align-items: center; justify-content: space-between;
-            padding: 12px 14px;
-            cursor: pointer;
-            border-radius: 8px;
-            color: var(--navy);
-            font-weight: 600;
-            font-size: 14px;
-            transition: background 0.2s ease;
+            display: flex; align-items: center; gap: 12px;
+            padding: 10px 14px; cursor: pointer; border-radius: 12px;
+            color: var(--navy); font-weight: 600; font-size: 14px; user-select: none;
+            transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
         }
-        .panel-group-title:hover { background: #f1f5f9; }
-        .panel-group-title .arrow { transition: transform 0.25s ease; color: #94a3b8; font-size: 12px; }
-        .panel-group.expanded .panel-group-title .arrow { transform: rotate(90deg); }
+        .panel-group-title:hover { background: #f1f5f9; transform: translateX(3px); box-shadow: inset 3px 0 0 var(--accent); }
+        .panel-group-title .gicon { width: 28px; height: 28px; flex: 0 0 28px; border-radius: 50%; object-fit: cover; transition: transform 0.25s ease; }
+        .panel-group-title:hover .gicon { transform: scale(1.12) rotate(-6deg); }
+        .panel-group-title .gname { flex: 1; min-width: 0; line-height: 1.25; }
+        .panel-group-title .count {
+            min-width: 22px; padding: 2px 7px; border-radius: 999px; text-align: center;
+            font-size: 11px; font-weight: 700; background: #e0eaff; color: #1e40af;
+        }
+        .panel-group-title .count.warn { background: #fef3c7; color: #92400e; }
+        .panel-group-title .count.danger { background: #fee2e2; color: #b91c1c; animation: badgePulse 1.8s ease-in-out infinite; }
+        @keyframes badgePulse { 0%,100% { box-shadow: 0 0 0 0 rgba(220,38,38,0.35); } 50% { box-shadow: 0 0 0 5px rgba(220,38,38,0); } }
+        .panel-group-title .chev { width: 16px; height: 16px; flex: 0 0 16px; stroke: #94a3b8; fill: none; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; transition: transform 0.3s ease; }
+        .panel-group.expanded > .panel-group-title { background: #f4f7fb; }
+        .panel-group.expanded .chev { transform: rotate(90deg); stroke: var(--accent); }
+        .panel-group.has-last > .panel-group-title .gname::after { content: ""; display: inline-block; width: 6px; height: 6px; margin-left: 8px; border-radius: 50%; background: var(--accent); vertical-align: middle; }
 
-        .panel-submenu {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .panel-group.expanded .panel-submenu { max-height: 700px; }
+        /* smooth open / close */
+        .panel-submenu { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 0.35s ease; }
+        .panel-group.expanded .panel-submenu { grid-template-rows: 1fr; }
+        .sub-inner { overflow: hidden; min-height: 0; padding-left: 14px; margin-left: 27px; border-left: 2px solid #e2e8f0; }
+        .panel-group.expanded .sub-inner { padding-top: 4px; padding-bottom: 6px; }
 
         .panel-submenu a {
-            display: block;
-            padding: 9px 14px 9px 28px;
-            color: #475569;
-            font-size: 13.5px;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: background 0.2s ease, color 0.2s ease;
+            display: block; padding: 8px 12px; margin: 1px 0;
+            color: #475569; font-size: 13.5px; text-decoration: none; border-radius: 8px;
+            opacity: 0; transform: translateX(-8px);
+            transition: background 0.2s ease, color 0.2s ease, padding-left 0.2s ease, opacity 0.3s ease, transform 0.3s ease;
         }
-        .panel-submenu a:hover { background: #eef2ff; color: var(--accent); }
+        .panel-group.expanded .panel-submenu a { opacity: 1; transform: translateX(0); transition-delay: 0s, 0s, 0s, calc(var(--j, 0) * 35ms + 80ms), calc(var(--j, 0) * 35ms + 80ms); }
+        .panel-submenu a:hover { background: #eef2ff; color: var(--accent); padding-left: 17px; transition-delay: 0s; }
+        .panel-submenu a.last { background: #eaf1ff; color: var(--accent); font-weight: 600; box-shadow: inset 3px 0 0 var(--accent); }
+        .panel-submenu a.last::after { content: "last visited"; float: right; font-size: 10px; font-weight: 600; letter-spacing: .03em; text-transform: uppercase; color: #6b8fd6; margin-top: 2px; }
+        .panel-group.hidden { display: none; }
+        .panel-submenu a.hidden { display: none; }
 
-        .panel-footer {
-            border-top: 1px solid #e2e8f0;
-            padding: 10px;
-        }
+        .no-results { display: none; text-align: center; padding: 30px 16px; color: #94a3b8; font-size: 13px; }
+        .no-results.show { display: block; }
+
+        /* footer with user card */
+        .panel-footer { flex: 0 0 auto; border-top: 1px solid #e2e8f0; padding: 12px; background: #fafbfd; }
+        .user-card { display: flex; align-items: center; gap: 10px; padding: 8px 10px 12px; }
+        .user-card img { width: 38px !important; height: 38px !important; border-radius: 50%; object-fit: cover; background: #e2e8f0; }
+        .user-card .uname { font-size: 13.5px; font-weight: 700; color: var(--navy); line-height: 1.2; }
+        .user-card .urole { font-size: 11.5px; color: #6b7787; }
+        .foot-actions { display: flex; gap: 8px; }
         .panel-footer a {
-            display: block;
-            padding: 12px 14px;
-            color: var(--navy);
-            font-weight: 600;
-            font-size: 14px;
-            text-decoration: none;
-            border-radius: 8px;
+            flex: 1; text-align: center; padding: 10px 12px; border-radius: 10px;
+            font-weight: 600; font-size: 13px; text-decoration: none; color: var(--navy);
+            background: #fff; border: 1.5px solid #e2e8f0; transition: background 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
         }
-        .panel-footer a:hover { background: #f1f5f9; }
-        .panel-footer a.logout { color: #dc2626; }
+        .panel-footer a:hover { background: #f1f5f9; transform: translateY(-1px); text-decoration: none; }
+        .panel-footer a.logout { color: #dc2626; border-color: #fecaca; }
+        .panel-footer a.logout:hover { background: #dc2626; color: #fff; border-color: #dc2626; }
+
+        @media (prefers-reduced-motion: reduce) {
+            .side-panel, .overlay, .panel-submenu, .panel-submenu a { transition-duration: 0.01ms !important; }
+            .side-panel.open .panel-nav > * { animation: none; }
+        }
 
         /* ===== MAIN CONTENT ===== */
         .main-content { padding: 30px 20px; max-width: 1200px; margin: 0 auto; width: 100%; }
@@ -449,85 +520,104 @@ while ($r = $statusRes->fetch_assoc()) {
     <nav class="side-panel" id="sidePanel">
         <div class="panel-header">
             <img src="assets/cms-logo.png" alt="CMS">
-            <span>Navigation</span>
-            <button id="closeBtn">&times;</button>
+            <div class="ph-text"><b>Navigation</b><small>Complaint Management System</small></div>
+            <button id="closeBtn" aria-label="Close menu">&times;</button>
         </div>
 
-        <div class="panel-nav">
-            <div class="panel-group">
-                <div class="panel-group-title" data-toggle>
-                    <span>Complainant Management</span>
-                    <span class="arrow">&#9656;</span>
-                </div>
-                <div class="panel-submenu">
-                    <a href="complainant_register.php">Register Complainant</a>
-                    <a href="complainant_list.php">Complainant List / Search</a>
-                </div>
-            </div>
+        <div class="panel-search">
+            <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>
+            <input type="text" id="menuSearch" placeholder="Search menu..." autocomplete="off">
+        </div>
+
+        <div class="panel-scroll">
+        <div class="panel-nav" id="panelNav">
+            <a class="home-link current" href="index.php">
+                <svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 10v10h5v-6h4v6h5V10"/></svg>
+                Home
+            </a>
 
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Complaint Management</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/account-logo.png" alt="">
+                    <span class="gname">Complainant Management</span>
+                    
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
+                    <a href="complainant_register.php">Register Complainant</a>
+                    <a href="complainant_list.php">Complainant List / Search</a>
+                </div></div>
+            </div>
+            <div class="panel-group">
+                <div class="panel-group-title" data-toggle>
+                    <img class="gicon" src="assets/complaint-logo.png" alt="">
+                    <span class="gname">Complaint Management</span>
+                    <?php if ($badgeComplaints > 0): ?><span class="count "><?php echo $badgeComplaints; ?></span><?php endif; ?>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+                </div>
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="category_manage.php">Manage Categories</a>
                     <a href="complaint_register.php">File a Complaint</a>
                     <a href="complaint_list.php">Complaint List / Search</a>
                     <a href="complaint_close.php">Complaint Closure</a>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Assignment</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/assignment-logo.png" alt="">
+                    <span class="gname">Assignment</span>
+                    <?php if ($badgeAssign > 0): ?><span class="count danger"><?php echo $badgeAssign; ?></span><?php endif; ?>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="personnel_manage.php">Personnel Management</a>
                     <a href="assignment_form.php">Assign Complaint</a>
                     <a href="assignment_list.php">Assignment List</a>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Investigation</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/investigation-logo.png" alt="">
+                    <span class="gname">Investigation</span>
+                    <?php if ($badgeInvestigate > 0): ?><span class="count warn"><?php echo $badgeInvestigate; ?></span><?php endif; ?>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="investigation_form.php">Create Investigation</a>
                     <a href="investigation_list.php">Investigation List</a>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Action</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/action-logo.png" alt="">
+                    <span class="gname">Action</span>
+                    <?php if ($badgeAction > 0): ?><span class="count warn"><?php echo $badgeAction; ?></span><?php endif; ?>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="action_form.php">Create Action</a>
                     <a href="action_list.php">Action List / Monitoring</a>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Resolution</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/resolution-logo.png" alt="">
+                    <span class="gname">Resolution</span>
+                    <?php if ($badgeResolution > 0): ?><span class="count "><?php echo $badgeResolution; ?></span><?php endif; ?>
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="resolution_form.php">Record Resolution</a>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Reports and Dashboard</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/reports-logo.png" alt="">
+                    <span class="gname">Reports and Dashboard</span>
+                    
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="dashboard.php">Dashboard</a>
                     <a href="report_summary.php">Summary Report</a>
                     <a href="report_category.php">Category Report</a>
@@ -538,15 +628,16 @@ while ($r = $statusRes->fetch_assoc()) {
                     <?php if ($_SESSION['role_id'] == 1): ?>
                     <a href="audit_log_view.php">Audit Trail</a>
                     <?php endif; ?>
-                </div>
+                </div></div>
             </div>
-
             <div class="panel-group">
                 <div class="panel-group-title" data-toggle>
-                    <span>Documentation</span>
-                    <span class="arrow">&#9656;</span>
+                    <img class="gicon" src="assets/documentation-logo.png" alt="">
+                    <span class="gname">Documentation</span>
+                    
+                    <svg class="chev" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
                 </div>
-                <div class="panel-submenu">
+                <div class="panel-submenu"><div class="sub-inner">
                     <a href="business_rules.php">Business Rules</a>
                     <a href="bug_tracking.php">Bug Tracking Sheet</a>
                     <a href="uat_checklist.php">UAT Checklist</a>
@@ -556,13 +647,24 @@ while ($r = $statusRes->fetch_assoc()) {
                     <a href="user_manual.php">User Manual</a>
                     <a href="technical_documentation.php">Technical Documentation</a>
                     <a href="final_demo.php">Final Demo Script</a>
-                </div>
+                </div></div>
             </div>
+            <div class="no-results" id="noResults">No menu found.<br>Try another word.</div>
+        </div>
         </div>
 
         <div class="panel-footer">
-            <a href="manage_account.php">My Account</a>
-            <a href="logout.php" class="logout">Logout</a>
+            <div class="user-card">
+                <img src="assets/account.png?v=<?php echo @filemtime(__DIR__ . '/assets/account.png'); ?>" alt="">
+                <div>
+                    <div class="uname"><?php echo htmlspecialchars($_SESSION['full_name']); ?></div>
+                    <div class="urole"><?php echo htmlspecialchars($roleName); ?></div>
+                </div>
+            </div>
+            <div class="foot-actions">
+                <a href="manage_account.php">My Account</a>
+                <a href="logout.php" class="logout">Logout</a>
+            </div>
         </div>
     </nav>
 
@@ -745,6 +847,13 @@ while ($r = $statusRes->fetch_assoc()) {
         const overlay = document.getElementById('overlay');
         const menuBtn = document.getElementById('menuBtn');
         const closeBtn = document.getElementById('closeBtn');
+        const menuSearch = document.getElementById('menuSearch');
+        const groups = Array.from(document.querySelectorAll('.panel-group'));
+        const NAV_KEY = 'cmsLastNav';
+
+        // stagger numbers for the slide-in animation
+        Array.from(document.getElementById('panelNav').children).forEach((el, i) => el.style.setProperty('--i', i));
+        groups.forEach(g => g.querySelectorAll('.panel-submenu a').forEach((a, j) => a.style.setProperty('--j', j)));
 
         function openPanel() {
             menuBtn.classList.add('is-open');
@@ -755,28 +864,66 @@ while ($r = $statusRes->fetch_assoc()) {
             menuBtn.classList.remove('is-open');
             panel.classList.remove('open');
             overlay.classList.remove('show');
+            menuSearch.value = '';
+            filterMenu();
         }
 
         menuBtn.addEventListener('click', openPanel);
+        closeBtn.addEventListener('click', closePanel);
+        overlay.addEventListener('click', closePanel);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape' && panel.classList.contains('open')) closePanel(); });
 
         // Topbar shrinks + blurs after scrolling
         const topbarEl = document.querySelector('.topbar');
         function onScrollTopbar() { topbarEl.classList.toggle('scrolled', window.scrollY > 10); }
         window.addEventListener('scroll', onScrollTopbar, { passive: true });
         onScrollTopbar();
-        closeBtn.addEventListener('click', closePanel);
-        overlay.addEventListener('click', closePanel);
 
-        document.querySelectorAll('.panel-group-title').forEach(title => {
-            title.addEventListener('click', () => {
-                const group = title.closest('.panel-group');
+        // open / close a group (one at a time)
+        groups.forEach(group => {
+            group.querySelector('.panel-group-title').addEventListener('click', () => {
                 const wasExpanded = group.classList.contains('expanded');
-                document.querySelectorAll('.panel-group.expanded').forEach(g => {
-                    if (g !== group) g.classList.remove('expanded');
-                });
+                groups.forEach(g => { if (g !== group) g.classList.remove('expanded'); });
                 group.classList.toggle('expanded', !wasExpanded);
             });
         });
+
+        // remember the last page visited from the menu
+        let lastHref = null;
+        try { lastHref = localStorage.getItem(NAV_KEY); } catch (e) {}
+        if (lastHref) {
+            const link = Array.from(document.querySelectorAll('.panel-submenu a')).find(a => a.getAttribute('href') === lastHref);
+            if (link) {
+                link.classList.add('last');
+                const g = link.closest('.panel-group');
+                g.classList.add('has-last', 'expanded');
+            }
+        }
+        document.querySelectorAll('.panel-submenu a, .panel-footer a').forEach(a => {
+            a.addEventListener('click', () => { try { localStorage.setItem(NAV_KEY, a.getAttribute('href')); } catch (e) {} });
+        });
+
+        // search the menu
+        const noResults = document.getElementById('noResults');
+        function filterMenu() {
+            const q = menuSearch.value.trim().toLowerCase();
+            let any = false;
+            groups.forEach(g => {
+                const title = g.querySelector('.gname').textContent.toLowerCase();
+                let hit = false;
+                g.querySelectorAll('.panel-submenu a').forEach(a => {
+                    const ok = !q || a.textContent.toLowerCase().includes(q) || title.includes(q);
+                    a.classList.toggle('hidden', !ok);
+                    if (ok) hit = true;
+                });
+                g.classList.toggle('hidden', !hit);
+                if (q && hit) g.classList.add('expanded');
+                if (hit) any = true;
+            });
+            noResults.classList.toggle('show', !any);
+            if (!q) groups.forEach(g => { if (!g.classList.contains('has-last')) g.classList.remove('expanded'); });
+        }
+        menuSearch.addEventListener('input', filterMenu);
     </script>
 </body>
 </html>

@@ -177,7 +177,7 @@
             let seen = false;
             try { seen = sessionStorage.getItem('cmsSplashSeen') === '1'; } catch (e) {}
 
-            const total = seen ? 900 : 4600;   // already saw it this session -> quick version
+            const total = seen ? 900 : 5000;   // already saw it this session -> quick version
             const fill = document.getElementById('fill');
             const pct = document.getElementById('pct');
             const msg = document.getElementById('msg');
