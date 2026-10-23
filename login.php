@@ -378,12 +378,12 @@ if ($conn->connect_error) {
         <form action="process_login.php" method="POST" id="loginFormEl">
             <div class="form-group stagger s2">
                 <label>Email</label>
-                <input type="email" name="email" placeholder="you@example.com" required />
+                <input type="email" name="email" placeholder="jerneevincent@gmail.com" required />
             </div>
             <div class="form-group stagger s3">
                 <label>Password</label>
                 <div class="pw-wrap">
-                    <input type="password" name="password" id="pwInput" placeholder="••••••••" required />
+                    <input type="password" name="password" id="pwInput" placeholder="pass1234" required />
                     <button type="button" class="pw-toggle" id="pwToggle">Show</button>
                 </div>
             </div>

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Sep 18, 2026 at 12:56 PM
+-- Generation Time: Oct 22, 2026 at 01:57 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -44,8 +44,9 @@ CREATE TABLE `actions` (
 --
 
 INSERT INTO `actions` (`action_id`, `complaint_id`, `investigation_id`, `action_type`, `action_description`, `responsible_person`, `target_date`, `status`, `created_at`) VALUES
-(1, 2, 1, 'Employee Action', 'None', 2, '2026-09-17', 'Completed', '2026-09-17 03:14:24'),
-(2, 3, 2, 'Corrective Action', 'Reviewed and addressed the issue', 1, '0000-00-00', 'Completed', '2026-09-17 03:56:55');
+(1, 2, 1, 'Employee Action', 'None', 2, '2026-09-17', 'Verified', '2026-09-17 03:14:24'),
+(2, 3, 2, 'Corrective Action', 'Reviewed and addressed the issue', 1, '0000-00-00', 'Verified', '2026-09-17 03:56:55'),
+(3, 20, 4, 'Employee Action', 'none', 1, '2026-09-30', 'Verified', '2026-09-24 02:22:57');
 
 -- --------------------------------------------------------
 
@@ -87,8 +88,12 @@ CREATE TABLE `assignments` (
 
 INSERT INTO `assignments` (`assignment_id`, `complaint_id`, `assigned_to`, `assigned_by`, `department_id`, `assignment_date`, `due_date`, `instructions`, `status`, `created_at`) VALUES
 (1, 2, 2, NULL, 3, '0026-09-16', '2026-10-01', 'None', 'reassigned', '2026-09-16 09:11:59'),
-(2, 1, 1, NULL, 1, '2026-09-16', '2026-09-20', 'None', 'active', '2026-09-16 09:15:34'),
-(3, 3, 1, NULL, 3, '2026-09-17', '2026-09-30', 'None', 'active', '2026-09-17 03:46:48');
+(2, 1, 1, NULL, 1, '2026-09-16', '2026-09-20', 'None', 'reassigned', '2026-09-16 09:15:34'),
+(3, 3, 1, NULL, 3, '2026-09-17', '2026-09-30', 'None', 'reassigned', '2026-09-17 03:46:48'),
+(4, 19, 1, NULL, 3, '2026-09-23', '2026-09-30', 'none', 'active', '2026-09-23 13:12:18'),
+(5, 20, 1, NULL, 1, '2026-09-24', '2026-09-30', 'note', 'active', '2026-09-24 02:19:13'),
+(6, 22, 1, NULL, 1, '2026-10-22', '2026-10-25', '', 'active', '2026-10-22 11:47:15'),
+(7, 21, 1, NULL, 1, '2026-10-22', '2026-10-25', '', 'active', '2026-10-22 11:50:14');
 
 -- --------------------------------------------------------
 
@@ -112,7 +117,9 @@ CREATE TABLE `assignment_history` (
 
 INSERT INTO `assignment_history` (`history_id`, `complaint_id`, `previous_assignee`, `new_assignee`, `reason_for_reassignment`, `assigned_by`, `assignment_date`) VALUES
 (1, 2, 1, 1, 'Not available', NULL, '2026-09-16 09:14:29'),
-(2, 2, 1, 2, 'Not available', NULL, '2026-09-16 09:16:02');
+(2, 2, 1, 2, 'Not available', NULL, '2026-09-16 09:16:02'),
+(3, 3, 1, 1, 'not available', NULL, '2026-09-20 02:41:07'),
+(4, 1, 1, 1, 'not available', NULL, '2026-09-23 12:30:08');
 
 -- --------------------------------------------------------
 
@@ -155,7 +162,142 @@ INSERT INTO `audit_logs` (`log_id`, `user_id`, `activity`, `record_affected`, `p
 (2, 1, 'Closed complaint', 'complaint_id: 3', 'Resolved', 'Closed', NULL, '2026-09-16 22:02:12'),
 (3, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-17 04:28:25'),
 (4, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-17 09:46:09'),
-(5, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 10:51:08');
+(5, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 10:51:08'),
+(6, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 11:57:18'),
+(7, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 11:57:33'),
+(8, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-18 16:03:35'),
+(9, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-19 00:44:12'),
+(10, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-19 03:52:29'),
+(11, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-19 03:52:55'),
+(12, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-19 06:27:54'),
+(13, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-19 06:28:20'),
+(14, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:24:51'),
+(15, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:26:21'),
+(16, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:37:19'),
+(17, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:38:32'),
+(18, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:40:21'),
+(19, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 02:50:49'),
+(20, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 04:29:10'),
+(21, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 04:29:39'),
+(22, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 05:11:16'),
+(23, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 05:22:34'),
+(24, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 06:54:57'),
+(25, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:17:28'),
+(26, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:19:25'),
+(27, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:26:56'),
+(28, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:42:59'),
+(29, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:50:27'),
+(30, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 09:57:31'),
+(31, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 10:04:13'),
+(32, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 10:09:46'),
+(33, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 10:12:58'),
+(34, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 15:08:12'),
+(35, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 15:33:33'),
+(36, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 15:35:32'),
+(37, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:18:47'),
+(38, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:19:41'),
+(39, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:20:24'),
+(40, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:22:25'),
+(41, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:30:41'),
+(42, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 16:31:53'),
+(43, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:25:55'),
+(44, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:34:56'),
+(45, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:41:09'),
+(46, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:41:21'),
+(47, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:42:54'),
+(48, 2, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-20 23:43:09'),
+(49, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-21 06:14:46'),
+(50, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-21 06:23:51'),
+(51, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-21 06:35:02'),
+(52, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-21 06:37:36'),
+(53, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-21 15:42:12'),
+(54, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 01:39:40'),
+(55, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 01:56:13'),
+(56, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 08:00:08'),
+(57, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 08:03:20'),
+(58, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 11:00:40'),
+(59, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 11:01:49'),
+(60, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 11:14:52'),
+(61, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 13:58:43'),
+(62, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 13:59:14'),
+(63, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:07:45'),
+(64, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:08:37'),
+(65, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:09:02'),
+(66, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:12:37'),
+(67, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:17:29'),
+(68, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:20:55'),
+(69, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-22 14:24:14'),
+(70, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 02:51:45'),
+(71, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:08:18'),
+(72, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:10:44'),
+(73, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:13:26'),
+(74, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:13:47'),
+(75, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:30:46'),
+(76, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:31:11'),
+(77, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:38:12'),
+(78, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 03:40:11'),
+(79, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 04:06:11'),
+(80, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:14:03'),
+(81, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:15:20'),
+(82, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:47:58'),
+(83, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:48:27'),
+(84, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:52:15'),
+(85, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:52:50'),
+(86, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:55:04'),
+(87, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 10:59:47'),
+(88, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:00:23'),
+(89, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:04:41'),
+(90, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:13:48'),
+(91, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:14:20'),
+(92, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:16:37'),
+(93, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:20:38'),
+(94, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:25:00'),
+(95, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:25:41'),
+(96, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:28:07'),
+(97, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:42:40'),
+(98, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:44:40'),
+(99, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:49:12'),
+(100, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:49:32'),
+(101, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 11:55:42'),
+(102, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:06:56'),
+(103, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:16:13'),
+(104, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:18:26'),
+(105, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:24:23'),
+(106, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:27:43'),
+(107, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:44:06'),
+(108, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:52:26'),
+(109, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 12:57:57'),
+(110, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 13:01:11'),
+(111, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 13:05:53'),
+(112, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-23 13:09:04'),
+(113, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-24 02:10:12'),
+(114, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-24 02:11:31'),
+(115, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-24 02:27:30'),
+(116, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-26 04:53:12'),
+(117, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-26 05:25:06'),
+(118, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-26 05:45:42'),
+(119, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-26 05:59:12'),
+(120, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-26 06:04:09'),
+(121, 1, 'Closed complaint', 'complaint_id: 20', 'Resolved', 'Closed', NULL, '2026-09-26 00:05:11'),
+(122, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-27 09:56:16'),
+(123, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-27 10:33:02'),
+(124, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-27 10:38:26'),
+(125, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-29 07:16:45'),
+(126, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-09-29 07:19:22'),
+(127, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-06 13:34:55'),
+(128, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-11 07:15:59'),
+(129, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-12 12:41:34'),
+(130, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-12 14:24:10'),
+(131, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-12 14:26:23'),
+(132, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 09:18:17'),
+(133, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 09:19:28'),
+(134, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 09:52:13'),
+(135, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 22:59:36'),
+(136, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 23:11:18'),
+(137, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-21 23:51:47'),
+(138, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-22 00:05:54'),
+(139, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-22 11:32:51'),
+(140, 1, 'User logged in', NULL, NULL, NULL, '::1', '2026-10-22 11:38:35');
 
 -- --------------------------------------------------------
 
@@ -185,7 +327,24 @@ INSERT INTO `complainants` (`complainant_id`, `full_name`, `contact_number`, `em
 (4, 'Kenneth Kyle', '09666666666', 'kyle@gmail.com', 'Bambang', 'BSCS', 'phone', '2026-09-16 07:44:07', 'active'),
 (5, 'Charlez Jules Espiritu', '09345627658', 'jules@gmail.com', 'Diadi', 'BSIT', 'email', '2026-09-17 03:41:17', 'active'),
 (6, 'Jed Razon', '09643865413', 'jed@gmail.com', 'Bundok', 'BSIT', 'email', '2026-09-17 03:41:56', 'active'),
-(7, 'Lance Goloyugo', '0987687679', 'lance@gmail.com', 'La Torre', 'BSIT', 'email', '2026-09-17 03:42:44', 'active');
+(7, 'Lance Goloyugo', '0987687679', 'lance@gmail.com', 'La Torre', 'BSIT', 'email', '2026-09-17 03:42:44', 'inactive'),
+(8, 'Ashley Labitoria', '09634286548', 'ashley@gmail.com', 'Bayombong', 'BSTM', 'phone', '2026-09-19 01:01:10', 'active'),
+(9, 'Andrei Taborda', '09767679563', 'andrei@gmail.com', 'Solano', 'BSIT', 'sms', '2026-09-19 06:00:29', 'active'),
+(10, 'Timothy Ferrer', '094567541127', 'timothy@gmail.com', 'Bayombong', 'BSIT', 'email', '2026-09-19 06:10:23', 'active'),
+(11, 'Franxyz Olano', '09453762976', 'franxyz@gmail.com', 'Isabela', 'BSIT', 'email', '2026-09-19 06:24:03', 'active'),
+(12, 'Sean Navarette', '09897654829', 'sean@gmail.com', 'Solano', 'BSIT', 'phone', '2026-09-19 06:42:12', 'inactive'),
+(13, 'Laurence Andrei Diaz', '09657648825', 'laurence@gmail.com', 'Solano', 'BSFM', 'email', '2026-09-20 05:17:54', 'inactive'),
+(14, 'Juan Dela Rosa', '09654835291', 'rosa@gmail.com', 'Bayombong', 'BSA', 'email', '2026-09-20 06:31:08', 'inactive'),
+(15, 'Orhea Odhie', '098563211352', 'orhea@gmail.com', 'Solano', 'BSN', 'phone', '2026-09-20 09:21:49', 'inactive'),
+(16, 'Tim Hortons', '09785564392', 'tim@gmail.com', 'California', 'BSIT', 'email', '2026-09-20 09:25:41', 'inactive'),
+(17, 'Natoy Leih', '09864568324', 'natoy@gmail.com', 'Bayombong', 'BSIT', 'email', '2026-09-23 11:35:24', 'active'),
+(18, 'Wilson Barete', '09631126746', 'wilson@gmail.com', 'Bayombong', 'BSTM', 'email', '2026-09-23 11:53:34', 'active'),
+(19, 'Andrei Manalo', '09864569372', 'andrei@gmail.com', 'Bayombong', 'BSFM', 'email', '2026-09-23 12:05:09', 'active'),
+(20, 'Adonis Papa', '09865334572', 'adonis@gmail.com', 'Solano', 'BSIT', 'phone', '2026-09-23 12:23:15', 'inactive'),
+(21, 'Renato Paquito', '09876548362', 'paquito@mail.com', 'Bayombong', 'BSCS', 'email', '2026-09-23 13:08:01', 'inactive'),
+(22, 'Laurence Andrei Diaz', '09657365971', 'laurence@gmail.com', 'Solano', 'BSFM', 'email', '2026-10-06 13:34:04', 'active'),
+(23, 'Odhie Diaz', '09654835291', 'odhie@gmail.com', 'Solano', 'BSIT', 'sms', '2026-10-21 09:50:22', 'active'),
+(24, 'Franxyz Olano Po', '09876457837', 'olano@gmail.com', 'Solano', 'BSIT', 'email', '2026-10-21 23:12:55', 'active');
 
 -- --------------------------------------------------------
 
@@ -218,7 +377,22 @@ INSERT INTO `complaints` (`complaint_id`, `complaint_number`, `complainant_id`, 
 (4, 'CMS-2026-0004', 5, 6, 'Failed', 'failed subjects', '0026-09-30', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:06:41'),
 (5, 'CMS-2026-0005', 5, 6, 'Failed', 'failed subject', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:28:54'),
 (6, 'CMS-2026-0006', 5, 6, 'Failed', 'failed subject', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:30:54'),
-(7, 'CMS-2026-0007', 5, 6, 'Failed', 'failed sub', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:37:26');
+(7, 'CMS-2026-0007', 5, 6, 'Failed', 'failed sub', '2026-09-17', 'Bayombong', 'medium', 'Submitted', '2026-09-17 10:37:26'),
+(8, 'CMS-2026-0008', 6, 6, 'Failed', 'failed subject', '2026-09-18', 'Bayombong', 'medium', 'Submitted', '2026-09-18 11:56:49'),
+(9, 'CMS-2026-0009', 10, 6, 'Failed', 'Failed Subject', '2026-09-19', 'Bayombong', 'medium', 'Submitted', '2026-09-19 06:17:31'),
+(10, 'CMS-2026-0010', 11, 5, 'Tuition Fee', 'None', '2026-09-18', 'Isabela', 'medium', 'Submitted', '2026-09-19 06:24:45'),
+(11, 'CMS-2026-0011', 12, 6, 'Concern about my grades', 'Report an academic concerns', '2026-09-18', 'Bambang', 'high', 'Closed', '2026-09-19 06:44:47'),
+(12, 'CMS-2026-0012', 13, 6, 'Failed', 'failed subject', '2026-09-20', 'Bayombong', 'medium', 'Submitted', '2026-09-20 05:18:24'),
+(13, 'CMS-2026-0013', 14, 2, 'Employee Attitude', 'the employee was rude', '2026-09-20', 'Bayombong', 'medium', 'Submitted', '2026-09-20 06:33:51'),
+(14, 'CMS-2026-0014', 15, 2, 'Employee Attitude', 'employee was rude', '2026-09-20', '', 'medium', 'Submitted', '2026-09-20 09:22:25'),
+(15, 'CMS-2026-0015', 16, 6, 'Failed', 'failed sub', '2026-09-20', 'Bayombong', 'medium', 'Submitted', '2026-09-20 09:26:13'),
+(16, 'CMS-2026-0016', 17, 6, 'Failed', 'failed subject', '2026-09-23', 'Bayombong', 'medium', 'Submitted', '2026-09-23 11:36:03'),
+(17, 'CMS-2026-0017', 18, 3, 'Damaged Product', 'received a small damage from the prodcut', '2026-09-23', 'Bayombong', 'medium', 'Submitted', '2026-09-23 11:55:07'),
+(18, 'CMS-2026-0018', 19, 5, 'Tuition Fee', 'none', '2026-09-23', 'Bayombong', 'medium', 'Submitted', '2026-09-23 12:05:41'),
+(19, 'CMS-2026-0019', 20, 5, 'Tuition Fee', 'hard to pay tuition pee', '2026-09-23', 'Solano', 'medium', 'Under Investigation', '2026-09-23 12:23:51'),
+(20, 'CMS-2026-0020', 21, 2, 'Employee Attitude', 'employee was rude', '2026-09-23', 'Bayombong', 'medium', 'Closed', '2026-09-23 13:08:36'),
+(21, 'CMS-2026-0021', 22, 5, 'Tuition Fee', 'none', '2023-06-05', 'Bayombong', 'medium', 'Assigned', '2026-10-06 13:34:33'),
+(22, 'CMS-2026-0022', 23, 6, 'Failed', 'Failed Subjects', '2026-10-21', 'Bayombong', 'medium', 'Assigned', '2026-10-21 09:51:26');
 
 -- --------------------------------------------------------
 
@@ -238,7 +412,7 @@ CREATE TABLE `complaint_categories` (
 --
 
 INSERT INTO `complaint_categories` (`category_id`, `category_name`, `is_active`, `created_at`) VALUES
-(1, 'Service Complaint', 1, '2026-09-16 02:06:24'),
+(1, 'Service Complaint', 1, '2026-09-15 18:06:24'),
 (2, 'Employee Complaint', 1, '2026-09-16 02:06:24'),
 (3, 'Product Complaint', 1, '2026-09-16 02:06:24'),
 (4, 'Facility Complaint', 1, '2026-09-16 02:06:24'),
@@ -290,7 +464,10 @@ CREATE TABLE `investigations` (
 
 INSERT INTO `investigations` (`investigation_id`, `complaint_id`, `investigator_id`, `start_date`, `target_completion_date`, `status`, `created_at`) VALUES
 (1, 2, 1, '2026-09-16', '2026-09-25', 'Completed', '2026-09-16 09:29:12'),
-(2, 3, 1, '2026-09-17', '2026-09-30', 'Completed', '2026-09-17 03:50:38');
+(2, 3, 1, '2026-09-17', '2026-09-30', 'Completed', '2026-09-17 03:50:38'),
+(3, 20, 1, '2026-09-23', '2026-09-30', 'Completed', '2026-09-23 13:11:28'),
+(4, 20, 1, '2026-09-24', '2026-09-30', 'Completed', '2026-09-24 02:20:03'),
+(5, 19, 1, '2026-09-24', '2026-09-30', 'Completed', '2026-09-24 02:21:35');
 
 -- --------------------------------------------------------
 
@@ -378,7 +555,8 @@ CREATE TABLE `resolutions` (
 
 INSERT INTO `resolutions` (`resolution_id`, `complaint_id`, `resolution_type`, `resolution_description`, `resolution_date`, `resolved_by`, `remarks`, `supporting_document`, `created_at`) VALUES
 (1, 2, 'Change', 'None', '2026-09-17', 1, 'None', NULL, '2026-09-17 03:29:39'),
-(2, 3, 'Grade Review', 'Issue has been reviewed and resolved after coordination with the concerned department.', '2026-09-17', 1, 'None', NULL, '2026-09-17 04:01:00');
+(2, 3, 'Grade Review', 'Issue has been reviewed and resolved after coordination with the concerned department.', '2026-09-17', 1, 'None', NULL, '2026-09-17 04:01:00'),
+(3, 20, 'Employee Attitude Improvement', 'Maintain a Respectful and professional attitude', '2026-09-24', 1, '', NULL, '2026-09-24 02:26:50');
 
 -- --------------------------------------------------------
 
@@ -429,7 +607,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`user_id`, `role_id`, `department_id`, `full_name`, `email`, `password`, `contact_number`, `specialization`, `status`, `created_at`) VALUES
-(1, 3, 3, 'Vincent Jernee Diaz', 'jerneevincent@gmail.com', '$2y$10$ztifrUaGVr5C9sBkat4t/OcFUS4msKhdxvtF3BZBKP/OffLK3Nn0O', '09611394471', 'IT System', 'active', '2026-09-16 09:06:23'),
+(1, 1, 3, 'Vincent Jernee Diaz', 'jerneevincent@gmail.com', '$2y$10$ztifrUaGVr5C9sBkat4t/OcFUS4msKhdxvtF3BZBKP/OffLK3Nn0O', '09611394471', 'IT System', 'active', '2026-09-16 09:06:23'),
 (2, 4, 3, 'Ioan Gonzales', 'gonzalesioan4@gmail.com', '$2y$10$0iuiyVXGSnimPzKTLoitxukkjytK5fm5a.KUosb.k0ohS27MA6xOO', '0987654321', 'Facility Maintenance', 'active', '2026-09-16 09:07:21');
 
 --
@@ -581,7 +759,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `actions`
 --
 ALTER TABLE `actions`
-  MODIFY `action_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `action_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `action_monitoring`
@@ -593,13 +771,13 @@ ALTER TABLE `action_monitoring`
 -- AUTO_INCREMENT for table `assignments`
 --
 ALTER TABLE `assignments`
-  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `assignment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `assignment_history`
 --
 ALTER TABLE `assignment_history`
-  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `history_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `attachments`
@@ -611,19 +789,19 @@ ALTER TABLE `attachments`
 -- AUTO_INCREMENT for table `audit_logs`
 --
 ALTER TABLE `audit_logs`
-  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `log_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=141;
 
 --
 -- AUTO_INCREMENT for table `complainants`
 --
 ALTER TABLE `complainants`
-  MODIFY `complainant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `complainant_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `complaints`
 --
 ALTER TABLE `complaints`
-  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `complaint_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `complaint_categories`
@@ -641,7 +819,7 @@ ALTER TABLE `departments`
 -- AUTO_INCREMENT for table `investigations`
 --
 ALTER TABLE `investigations`
-  MODIFY `investigation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `investigation_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `investigation_evidence`
@@ -665,7 +843,7 @@ ALTER TABLE `notifications`
 -- AUTO_INCREMENT for table `resolutions`
 --
 ALTER TABLE `resolutions`
-  MODIFY `resolution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `resolution_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `roles`
