@@ -28,6 +28,7 @@ $personnel = $conn->query("SELECT user_id, full_name FROM users WHERE status = '
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/enhance.css">
     <style>
         :root { --navy:#0a2540; --accent:#2f6fed; --bg:#f4f7fb; --ink:#1b2733; --muted:#6b7787; }
         * { box-sizing: border-box; font-family:'Poppins',sans-serif; }
@@ -218,5 +219,6 @@ $personnel = $conn->query("SELECT user_id, full_name FROM users WHERE status = '
             });
         })();
     </script>
+    <script src="assets/enhance.js"></script>
 </body>
 </html>

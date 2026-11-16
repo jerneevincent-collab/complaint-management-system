@@ -47,6 +47,7 @@ while ($row = $statusData->fetch_assoc()) {
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/enhance.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js"></script>
     <style>
         :root { --navy:#0a2540; --accent:#2f6fed; --bg:#f4f7fb; }
@@ -187,5 +188,6 @@ while ($row = $statusData->fetch_assoc()) {
             }
         });
     </script>
+    <script src="assets/enhance.js"></script>
 </body>
 </html>

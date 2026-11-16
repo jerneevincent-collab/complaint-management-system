@@ -51,6 +51,7 @@ $result = $conn->query("SELECT * FROM complaint_categories ORDER BY category_id"
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/enhance.css">
     <style>
         :root {
             --navy: #0a2540;
@@ -223,5 +224,6 @@ $result = $conn->query("SELECT * FROM complaint_categories ORDER BY category_id"
             <?php endif; ?>
         </div>
     </div>
+    <script src="assets/enhance.js"></script>
 </body>
 </html>

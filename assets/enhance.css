@@ -1,0 +1,1044 @@
+/* ===== CMS Enhancements: transitions, animations, small fixes ===== */
+
+/* 1. Page transition (fade in / fade out) */
+body {
+    animation: cmsPageIn .4s ease both;
+}
+
+body.cms-leaving {
+    opacity: 0;
+    transition: opacity .18s ease;
+}
+
+@keyframes cmsPageIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* 2. Font fix: buttons and fields use Poppins like the rest of the system */
+button,
+input,
+select,
+textarea {
+    font-family: 'Poppins', sans-serif;
+}
+
+/* 3. Dashboard: all 7 KPI cards fit in one row */
+body .kpi-container {
+    grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+}
+
+/* 4. Hover effect on dashboard / report cards */
+.kpi-container .kpi-card,
+.chart-card,
+.table-card,
+.report-card {
+    transition: transform .25s ease, box-shadow .25s ease;
+}
+
+.kpi-container .kpi-card:hover,
+.chart-card:hover {
+    transform: translateY(-4px) !important;
+    box-shadow: 0 14px 30px rgba(10, 37, 64, .13);
+}
+
+/* 5. Smooth table row hover */
+tbody tr,
+table tr {
+    transition: background-color .2s ease;
+}
+
+tbody tr:hover {
+    background-color: #f4f8ff;
+}
+
+/* 6. Buttons: small press effect */
+button:not(:disabled),
+.btn-primary,
+.btn-search,
+.submit-btn {
+    transition: transform .15s ease, box-shadow .2s ease, filter .2s ease;
+}
+
+button:not(:disabled):active,
+.btn-primary:active,
+.btn-search:active,
+.submit-btn:active {
+    transform: scale(.97);
+}
+
+/* 7. Toast notifications */
+#cms-toasts {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 99999;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    pointer-events: none;
+}
+
+.cms-toast {
+    min-width: 240px;
+    max-width: 360px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    border-radius: 12px;
+    background: #fff;
+    color: #1b2733;
+    font: 500 13px 'Poppins', sans-serif;
+    border-left: 5px solid #2f6fed;
+    box-shadow: 0 12px 30px rgba(10, 37, 64, .18);
+    animation: cmsToastIn .35s cubic-bezier(.34, 1.56, .64, 1) both;
+    pointer-events: auto;
+}
+
+.cms-toast.success {
+    border-left-color: #16a34a;
+}
+
+.cms-toast.error {
+    border-left-color: #dc2626;
+}
+
+.cms-toast .t-ico {
+    font-size: 16px;
+    font-weight: 700;
+}
+
+.cms-toast.success .t-ico {
+    color: #16a34a;
+}
+
+.cms-toast.error .t-ico {
+    color: #dc2626;
+}
+
+.cms-toast.out {
+    animation: cmsToastOut .3s ease forwards;
+}
+
+@keyframes cmsToastIn {
+    from {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes cmsToastOut {
+    to {
+        opacity: 0;
+        transform: translateX(40px);
+    }
+}
+
+/* 8. Confirm popup (replaces the browser confirm box) */
+.cms-modal-bg {
+    position: fixed;
+    inset: 0;
+    z-index: 99998;
+    background: rgba(10, 37, 64, .45);
+    backdrop-filter: blur(3px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: cmsFade .2s ease both;
+}
+
+.cms-modal {
+    width: min(92vw, 380px);
+    background: #fff;
+    border-radius: 18px;
+    padding: 26px 26px 22px;
+    text-align: center;
+    box-shadow: 0 24px 60px rgba(10, 37, 64, .3);
+    font-family: 'Poppins', sans-serif;
+    animation: cmsPop .3s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.cms-modal .m-ico {
+    width: 52px;
+    height: 52px;
+    border-radius: 50%;
+    margin: 0 auto 12px;
+    background: #fdeaea;
+    color: #dc2626;
+    font-size: 26px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.cms-modal h4 {
+    margin: 0 0 6px;
+    color: #0a2540;
+    font-size: 17px;
+}
+
+.cms-modal p {
+    margin: 0 0 20px;
+    color: #64748b;
+    font-size: 13px;
+}
+
+.cms-modal .m-btns {
+    display: flex;
+    gap: 10px;
+}
+
+.cms-modal .m-btns button {
+    flex: 1;
+    padding: 10px 0;
+    border-radius: 10px;
+    border: 0;
+    cursor: pointer;
+    font: 600 13px 'Poppins', sans-serif;
+}
+
+.cms-modal .m-cancel {
+    background: #eef2f7;
+    color: #334155;
+}
+
+.cms-modal .m-ok {
+    background: #dc2626;
+    color: #fff;
+}
+
+@keyframes cmsFade {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes cmsPop {
+    from {
+        opacity: 0;
+        transform: scale(.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    body,
+    .cms-toast,
+    .cms-modal,
+    .cms-modal-bg {
+        animation: none !important;
+    }
+}
+
+/* keep popup and toasts full-size even though style.css limits direct children of body */
+body>.cms-modal-bg {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+body>#cms-toasts {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+/* =====================================================================
+   ROUND 2: loading bar, sticky table header, status icons,
+   empty state, dark mode
+   ===================================================================== */
+
+/* ---- Loading bar on top ---- */
+body>#cms-progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    width: 0;
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: linear-gradient(90deg, #2f6fed, #60a5fa);
+    box-shadow: 0 0 8px rgba(47, 111, 237, .6);
+    z-index: 100000;
+    opacity: 0;
+    pointer-events: none;
+}
+
+#cms-progress.run {
+    opacity: 1;
+    width: 78%;
+    transition: width 1.6s cubic-bezier(.1, .7, .2, 1);
+}
+
+#cms-progress.done {
+    opacity: 0;
+    width: 100%;
+    transition: width .25s ease, opacity .4s ease .25s;
+}
+
+/* ---- Sticky table header (only on tables whose header has a solid color) ---- */
+th.cms-stick {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.table-scroll {
+    max-height: 78vh;
+    overflow-y: auto;
+}
+
+/* ---- Status icons ---- */
+.cms-sico {
+    display: inline-block;
+    margin-right: 5px;
+    font-weight: 700;
+    font-size: .95em;
+    line-height: 1;
+}
+
+.cms-overdue {
+    animation: cmsPulse 1.6s ease-in-out infinite;
+}
+
+@keyframes cmsPulse {
+
+    0%,
+    100% {
+        box-shadow: 0 0 0 0 rgba(220, 38, 38, .35);
+    }
+
+    50% {
+        box-shadow: 0 0 0 6px rgba(220, 38, 38, 0);
+    }
+}
+
+/* ---- Empty state ---- */
+.cms-empty {
+    text-align: center;
+    padding: 44px 20px;
+    font-family: 'Poppins', sans-serif;
+    animation: cmsPageIn .4s ease both;
+}
+
+.cms-empty svg {
+    width: 60px;
+    height: 60px;
+    stroke: #a9b6c8;
+    fill: none;
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    margin-bottom: 8px;
+}
+
+.cms-empty h4 {
+    margin: 0 0 4px;
+    color: #0a2540;
+    font-size: 15px;
+}
+
+.cms-empty p {
+    margin: 0;
+    color: #64748b;
+    font-size: 13px;
+}
+
+/* ---- Dark mode toggle button ---- */
+body>#cms-dark-btn {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 99990;
+    width: 44px;
+    height: 44px;
+    padding: 0 !important;
+    margin: 0 !important;
+    max-width: none !important;
+    border-radius: 50%;
+    border: 0;
+    cursor: pointer;
+    background: #0a2540;
+    color: #fff;
+    font-size: 20px;
+    line-height: 44px;
+    text-align: center;
+    box-shadow: 0 8px 20px rgba(10, 37, 64, .3);
+    transition: transform .2s ease, box-shadow .2s ease;
+}
+
+body>#cms-dark-btn:hover {
+    transform: translateY(-3px) rotate(15deg);
+}
+
+/* ---- Dark mode (inverts the page, then keeps images and dark bars as they were) ---- */
+html.cms-dark {
+    filter: invert(1) hue-rotate(180deg);
+    background: #fff;
+}
+
+html.cms-dark img,
+html.cms-dark video,
+html.cms-dark canvas,
+html.cms-dark .cms-keep {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+html.cms-dark body>#cms-dark-btn {
+    filter: invert(1) hue-rotate(180deg);
+}
+
+/* =====================================================================
+   ROUND 3: PHONE / SMALL SCREEN FIXES
+   ===================================================================== */
+@media (max-width: 640px) {
+
+    /* Top bars: title no longer floats on top of the Back link */
+    .topbar h2 {
+        position: static !important;
+        transform: none !important;
+        flex: 1;
+        margin: 0 8px !important;
+        text-align: center;
+        font-size: 14px !important;
+        white-space: normal !important;
+        line-height: 1.25;
+    }
+
+    .topbar .back-link {
+        font-size: 13px !important;
+        white-space: nowrap;
+    }
+
+    .topbar {
+        padding-left: 14px !important;
+        padding-right: 14px !important;
+    }
+
+    /* Home top bar: keep the avatar round, hide only the name */
+    .user-badge .avatar-wrap {
+        display: inline-flex !important;
+    }
+
+    .user-badge .avatar-wrap img {
+        width: 32px !important;
+        height: 32px !important;
+        flex: 0 0 32px;
+    }
+
+    .user-badge a>span:not(.avatar-wrap) {
+        display: none !important;
+    }
+
+    .user-badge .divider {
+        display: none !important;
+    }
+
+    .user-badge {
+        padding: 4px 10px 4px 6px !important;
+        gap: 8px !important;
+    }
+
+    .topbar a.brand span {
+        font-size: 11.5px !important;
+        line-height: 1.2;
+    }
+
+    .topbar .left {
+        gap: 10px !important;
+        min-width: 0;
+    }
+
+    /* Dashboard: last odd KPI card uses the full row */
+    .kpi-container .kpi-card:last-child:nth-child(odd) {
+        grid-column: 1 / -1;
+    }
+
+    /* Complaint view timeline: swipe sideways instead of getting cut */
+    .progress {
+        overflow-x: auto;
+        padding-bottom: 8px;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .progress .p {
+        min-width: 64px;
+    }
+
+    /* Filters */
+    .filter-card {
+        padding: 14px !important;
+    }
+
+    /* Inputs: 16px stops iPhone from zooming in when you tap a field */
+    input:not([type="checkbox"]):not([type="radio"]),
+    select,
+    textarea {
+        font-size: 16px !important;
+    }
+
+    /* Tables: small hint that you can swipe sideways */
+    .cms-swipe {
+        text-align: center;
+        font: 500 11px 'Poppins', sans-serif;
+        color: #64748b;
+        padding: 6px 0 2px;
+    }
+
+    /* Small floating buttons and toasts */
+    body>#cms-dark-btn {
+        width: 38px;
+        height: 38px;
+        right: 12px;
+        bottom: 12px;
+        opacity: .88;
+    }
+
+    body>#cms-dark-btn svg {
+        width: 18px;
+        height: 18px;
+    }
+
+    body:has(.overlay.show)>#cms-dark-btn,
+    body:has(.side-panel.open)>#cms-dark-btn {
+        display: none;
+    }
+
+    #cms-toasts {
+        left: 12px !important;
+        right: 12px !important;
+        top: 12px !important;
+    }
+
+    .cms-toast {
+        min-width: 0;
+        max-width: none;
+    }
+
+    /* Easier to tap */
+    .act,
+    .action-link,
+    .chip,
+    .btn-search,
+    .btn-primary {
+        min-height: 36px;
+    }
+}
+
+/* =====================================================================
+   ROUND 4: glass look, animated background, spotlight, reveal on scroll,
+   ripple, confetti, typing, progress ring
+   ===================================================================== */
+
+/* ---------- Animated soft background ---------- */
+body>#cms-bg,
+body>#cms-confetti,
+body>.cms-check-wrap {
+    max-width: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    width: auto !important;
+}
+
+#cms-bg {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+#cms-bg i {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(70px);
+    opacity: .5;
+    will-change: transform;
+}
+
+#cms-bg i:nth-child(1) {
+    width: 46vmax;
+    height: 46vmax;
+    left: -14vmax;
+    top: -16vmax;
+    background: radial-gradient(circle, #8fb4ff, rgba(143, 180, 255, 0) 68%);
+    animation: cmsDrift1 28s ease-in-out infinite alternate;
+}
+
+#cms-bg i:nth-child(2) {
+    width: 40vmax;
+    height: 40vmax;
+    right: -12vmax;
+    top: 18vh;
+    background: radial-gradient(circle, #9be7ff, rgba(155, 231, 255, 0) 68%);
+    animation: cmsDrift2 34s ease-in-out infinite alternate;
+}
+
+#cms-bg i:nth-child(3) {
+    width: 38vmax;
+    height: 38vmax;
+    left: 20vw;
+    bottom: -20vmax;
+    background: radial-gradient(circle, #b9b4ff, rgba(185, 180, 255, 0) 68%);
+    animation: cmsDrift3 31s ease-in-out infinite alternate;
+}
+
+@keyframes cmsDrift1 {
+    to {
+        transform: translate(14vw, 12vh) scale(1.15);
+    }
+}
+
+@keyframes cmsDrift2 {
+    to {
+        transform: translate(-16vw, -10vh) scale(1.1);
+    }
+}
+
+@keyframes cmsDrift3 {
+    to {
+        transform: translate(10vw, -14vh) scale(1.2);
+    }
+}
+
+/* ---------- Glass cards ---------- */
+.kpi-card,
+.chart-card,
+.panel-card,
+.filter-card,
+.table-card,
+.report-card {
+    background-color: rgba(255, 255, 255, .8) !important;
+    -webkit-backdrop-filter: blur(14px) saturate(140%);
+    backdrop-filter: blur(14px) saturate(140%);
+}
+
+.table-card td {
+    background-color: transparent !important;
+}
+
+.side-panel {
+    background-color: rgba(255, 255, 255, .92) !important;
+    -webkit-backdrop-filter: blur(18px) saturate(150%);
+    backdrop-filter: blur(18px) saturate(150%);
+}
+
+/* ---------- Spotlight that follows the mouse ---------- */
+.cms-spot {
+    position: relative;
+}
+
+.cms-spot:hover {
+    background-image: radial-gradient(240px circle at var(--mx, 50%) var(--my, 50%), rgba(47, 111, 237, .13), rgba(47, 111, 237, 0) 65%) !important;
+}
+
+/* ---------- Reveal on scroll ---------- */
+.cms-rv {
+    opacity: 0;
+}
+
+.cms-rv.in {
+    opacity: 1;
+    animation: cmsRise .65s cubic-bezier(.22, 1, .36, 1) both;
+    animation-delay: var(--d, 0ms);
+}
+
+@keyframes cmsRise {
+    from {
+        opacity: 0;
+        translate: 0 22px;
+    }
+
+    to {
+        opacity: 1;
+        translate: 0 0;
+    }
+}
+
+/* ---------- Sidebar: light sweep, menu button ---------- */
+.panel-group-title {
+    position: relative;
+    overflow: hidden;
+}
+
+.panel-group-title::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: linear-gradient(110deg, transparent 30%, rgba(47, 111, 237, .14) 50%, transparent 70%);
+    transform: translateX(-120%);
+    transition: transform .7s ease;
+}
+
+.panel-group-title:hover::after {
+    transform: translateX(120%);
+}
+
+#menuBtn span {
+    transition: transform .3s ease, width .3s ease;
+}
+
+#menuBtn:hover span:nth-child(2) {
+    transform: scaleX(.6);
+    transform-origin: left;
+}
+
+#menuBtn:active {
+    transform: scale(.92);
+}
+
+/* ---------- Tables, badges, lists ---------- */
+tbody tr:hover td:first-child {
+    box-shadow: inset 3px 0 0 #2f6fed;
+}
+
+.status-pill,
+.status-badge,
+.priority-badge {
+    animation: cmsPop .55s cubic-bezier(.34, 1.56, .64, 1) .2s both;
+}
+
+@keyframes cmsPop {
+    from {
+        opacity: 0;
+        scale: .6;
+    }
+
+    to {
+        opacity: 1;
+        scale: 1;
+    }
+}
+
+.recent-list li {
+    transition: background-color .2s ease, padding-left .25s ease;
+}
+
+.recent-list li:hover {
+    padding-left: 8px;
+}
+
+/* ---------- Forms: label color, shake ---------- */
+.input-group label,
+.field label {
+    transition: color .25s ease;
+}
+
+.input-group:focus-within label,
+.field:focus-within label {
+    color: #2f6fed;
+}
+
+.cms-shake {
+    animation: cmsShake .42s ease !important;
+}
+
+@keyframes cmsShake {
+    20% {
+        translate: -6px 0;
+    }
+
+    40% {
+        translate: 6px 0;
+    }
+
+    60% {
+        translate: -4px 0;
+    }
+
+    80% {
+        translate: 3px 0;
+    }
+}
+
+/* ---------- Ripple + loading buttons ---------- */
+.cms-rip-host {
+    position: relative;
+    overflow: hidden;
+}
+
+.cms-ripple {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+    transform: scale(0);
+    animation: cmsRipple .65s ease-out forwards;
+}
+
+@keyframes cmsRipple {
+    to {
+        transform: scale(1);
+        opacity: 0;
+    }
+}
+
+.cms-loading {
+    pointer-events: none;
+    position: relative;
+    color: transparent !important;
+}
+
+.cms-loading::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, .5);
+    border-top-color: #fff;
+    border-radius: 50%;
+    animation: cmsSpin .7s linear infinite;
+}
+
+@keyframes cmsSpin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* ---------- Typing effect ---------- */
+.cms-caret {
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    margin-left: 3px;
+    background: currentColor;
+    vertical-align: -.12em;
+    animation: cmsBlink 1s steps(2) infinite;
+}
+
+@keyframes cmsBlink {
+    50% {
+        opacity: 0;
+    }
+}
+
+/* ---------- Success: confetti + check ---------- */
+#cms-confetti {
+    position: fixed;
+    inset: 0;
+    z-index: 99997;
+    pointer-events: none;
+}
+
+.cms-check-wrap {
+    position: fixed;
+    inset: 0;
+    z-index: 99996;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    animation: cmsFade .25s ease both;
+}
+
+.cms-check-wrap.out {
+    animation: cmsFadeOut .4s ease forwards;
+}
+
+.cms-check-box {
+    background: rgba(255, 255, 255, .92);
+    border-radius: 22px;
+    padding: 26px 34px;
+    text-align: center;
+    -webkit-backdrop-filter: blur(12px);
+    backdrop-filter: blur(12px);
+    box-shadow: 0 24px 60px rgba(10, 37, 64, .28);
+    font-family: 'Poppins', sans-serif;
+    animation: cmsPop2 .5s cubic-bezier(.34, 1.56, .64, 1) both;
+}
+
+.cms-check-box svg {
+    width: 84px;
+    height: 84px;
+}
+
+.cms-check-box circle {
+    fill: none;
+    stroke: #16a34a;
+    stroke-width: 5;
+    stroke-dasharray: 289;
+    stroke-dashoffset: 289;
+    animation: cmsDraw .6s ease .1s forwards;
+    transform-origin: center;
+}
+
+.cms-check-box path {
+    fill: none;
+    stroke: #16a34a;
+    stroke-width: 6;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-dasharray: 60;
+    stroke-dashoffset: 60;
+    animation: cmsDraw .4s ease .6s forwards;
+}
+
+.cms-check-box p {
+    margin: 8px 0 0;
+    color: #0a2540;
+    font-weight: 600;
+    font-size: 15px;
+}
+
+@keyframes cmsDraw {
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes cmsPop2 {
+    from {
+        opacity: 0;
+        transform: scale(.7);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes cmsFadeOut {
+    to {
+        opacity: 0;
+    }
+}
+
+/* ---------- Dashboard progress ring ---------- */
+.cms-ring-card {
+    display: flex;
+    flex-direction: column;
+}
+
+.cms-ring {
+    position: relative;
+    width: 190px;
+    height: 190px;
+    margin: 6px auto 8px;
+}
+
+.cms-ring svg {
+    width: 100%;
+    height: 100%;
+}
+
+.cms-ring circle {
+    fill: none;
+    stroke-width: 11;
+}
+
+.cms-ring .trk {
+    stroke: #e2e8f0;
+}
+
+.cms-ring .bar {
+    stroke: url(#cmsRg);
+    stroke-linecap: round;
+    stroke-dasharray: 314.16;
+    stroke-dashoffset: 314.16;
+    transition: stroke-dashoffset 1.6s cubic-bezier(.22, 1, .36, 1);
+}
+
+.cms-ring.go .bar {
+    stroke-dashoffset: var(--off, 314.16);
+}
+
+.cms-ring .pct {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.cms-ring .pct b {
+    font-size: 34px;
+    color: #0a2540;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.cms-ring .pct span {
+    font-size: 11px;
+    color: #64748b;
+    margin-top: 4px;
+}
+
+.cms-ring-note {
+    text-align: center;
+    margin: 0;
+    font-size: 13px;
+    color: #64748b;
+}
+
+/* ---------- Phones: lighter effects ---------- */
+@media (max-width: 700px) {
+    #cms-bg i {
+        filter: blur(50px);
+        opacity: .45;
+    }
+
+    #cms-bg i:nth-child(3) {
+        display: none;
+    }
+
+    .kpi-card,
+    .chart-card,
+    .panel-card,
+    .filter-card,
+    .table-card,
+    .report-card {
+        -webkit-backdrop-filter: blur(8px);
+        backdrop-filter: blur(8px);
+    }
+
+    .cms-ring {
+        width: 160px;
+        height: 160px;
+    }
+}
+
+/* ---------- Respect "reduce motion" ---------- */
+@media (prefers-reduced-motion: reduce) {
+
+    #cms-bg i,
+    .cms-rv.in,
+    .status-pill,
+    .status-badge,
+    .priority-badge,
+    .cms-caret,
+    .cms-ripple {
+        animation: none !important;
+    }
+
+    .cms-rv {
+        opacity: 1;
+    }
+}

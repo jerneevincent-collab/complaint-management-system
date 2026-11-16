@@ -53,6 +53,7 @@ while ($r = $statusRes->fetch_assoc()) {
     <title>Dashboard - Complaint Management System</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="assets/style.css">
+    <link rel="stylesheet" href="assets/enhance.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.0/chart.umd.min.js" async></script>
     <style>
         :root { --navy: #0a2540; --accent: #2f6fed; }
@@ -925,5 +926,6 @@ while ($r = $statusRes->fetch_assoc()) {
         }
         menuSearch.addEventListener('input', filterMenu);
     </script>
+    <script src="assets/enhance.js"></script>
 </body>
 </html>
